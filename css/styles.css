@@ -1,0 +1,27 @@
+body{
+
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif!important;
+  font-size: 11px!important;  
+}
+th{
+
+  text-align: left;
+}
+
+table{
+font-size: 12px!important;
+
+}
+
+input[type="search"]
+{
+  width: 300px!important;
+  height: 28px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  border: 2px slategrey solid;
+}
+.dataTables_length{
+  margin-top: 20px;
+
+}
