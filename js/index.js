@@ -1,11 +1,21 @@
 $(document).ready(function () {
+
     $('#example').DataTable({
         "autoWidth": false,
         "pageLength": 50,
+        "colReorder": true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            'pdfHtml5'
+        ],
+
         //"orderFixed": [ 2, 'des' ],
         "ajax": "db/kitab-openITI.json",
         "columns": [
-          //  { "data": "versionUri" },
+            //  { "data": "versionUri" },
             { "data": "id" },
             { "data": "date" },
             {
@@ -22,12 +32,19 @@ $(document).ready(function () {
                     var i = data.indexOf('.')
                     data = data.substring(i + 1);
                     return data = data.replace(/([A-Z])/g, ' $1').trim();
-                   
+
                 }
 
             },
 
-            { "data": "status" },
+            {
+                "data": "status",
+                "render": function (data, type, row, meta) {
+
+                    return data.toUpperCase();
+                }
+
+            },
             { "data": "length" },
             {
                 "data": "url",
@@ -35,7 +52,24 @@ $(document).ready(function () {
                     return '<a href="' + data + '" target="_blank">Read the full text</a>';
                 }
 
+
+            },
+            {
+                "data": "tags",
+                "render": function (data, type, row, meta) {
+                    return data = data.replace(/,_|_|,/g, " <br/>" )
+
+
+
+
+
+
+                }
             }
         ]
     });
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 });

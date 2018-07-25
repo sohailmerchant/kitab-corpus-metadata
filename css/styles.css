@@ -1,16 +1,32 @@
 body{
 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif!important;
-  font-size: 11px!important;  
+  font-size: 12px!important;  
 }
 th{
 
   text-align: left;
 }
+td {
+word-wrap: break-word;
+
+} 
 
 table{
-font-size: 12px!important;
+font-size: 13px!important;
+/* table-layout:fixed; */
 
+}
+
+.heading{
+
+  float: left;
+   height: 100px;
+   width: 80%; 
+  border-bottom: 1px #f8f9fa solid; 
+  margin-top: 20px; 
+  margin-left: 10px;
+   margin-bottom: 20px
 }
 
 input[type="search"]
@@ -24,4 +40,15 @@ input[type="search"]
 .dataTables_length{
   margin-top: 20px;
 
+}
+
+.btn btn-secondary buttons-copy buttons-html5
+{
+  background-color: #f8f9fa!important;
+
+}
+.btn-secondary{
+
+  background-color: #f8f9fa!important;
+  color: #007bff!important;
 }
