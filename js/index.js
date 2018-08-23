@@ -53,18 +53,7 @@ $(document).ready(function () {
                 }
 
 
-            },
-            {
-                "data": "tags",
-                "render": function (data, type, row, meta) {
-                    return data = data.replace(/,_|_|,/g, " <br/>" )
-
-
-
-
-
-
-                }
+            }
             }
         ]
     });
