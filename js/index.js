@@ -13,7 +13,7 @@ $(document).ready(function () {
         ],
 
         //"orderFixed": [ 2, 'des' ],
-        "ajax": "db/kitab.json",
+        "ajax": "db/kitab-openITI.json",
         "columns": [
             //  { "data": "versionUri" },
             { "data": "id" },
