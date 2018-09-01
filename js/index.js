@@ -13,13 +13,13 @@ $(document).ready(function () {
         ],
 
         //"orderFixed": [ 2, 'des' ],
-        "ajax": "db/kitab.json",
+        "ajax": "db/kitab-openITI.json",
         "columns": [
             //  { "data": "versionUri" },
-            { "data": "Book URI" },
-            { "data": "Died" },
+            { "data": "id" },
+            { "data": "date" },
             {
-                "data": "Author",
+                "data": "author",
                 "render": function (data, type, row, meta) {
                     s = data.substring(4);
                     return s = s.replace(/([A-Z])/g, ' $1').trim();
@@ -27,7 +27,7 @@ $(document).ready(function () {
             },
 
             {
-                "data": "Book Title",
+                "data": "book",
                 "render": function (data, type, row, meta) {
                     var i = data.indexOf('.')
                     data = data.substring(i + 1);
@@ -38,23 +38,34 @@ $(document).ready(function () {
             },
 
             {
-                "data": "Source",
+                "data": "status",
                 "render": function (data, type, row, meta) {
 
                     return data.toUpperCase();
                 }
 
             },
-            { "data": "Word Count" },
+            { "data": "length" },
             {
-                "data": "Full Text Book URL",
+                "data": "url",
                 "render": function (data, type, row, meta) {
                     return '<a href="' + data + '" target="_blank">Read the full text</a>';
                 }
 
 
+            },
+            {
+                "data": "tags",
+                "render": function (data, type, row, meta) {
+                    return data = data.replace(/,_|_|,/g, " <br/>" )
+
+
+
+
+
+
+                }
             }
-            
         ]
     });
 
