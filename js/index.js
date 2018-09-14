@@ -8,8 +8,15 @@ $(document).ready(function () {
         buttons: [
             'copyHtml5',
             'excelHtml5',
-            'csvHtml5',
-            'pdfHtml5'
+            'pdfHtml5',
+            {
+                extend: 'csv',
+                filename: 'kitab-corpusmetadata',
+                stripHtml: true,
+                exportOptions: { orthogonal: 'rawExport' },
+
+
+            }
         ],
 
         //"orderFixed": [ 2, 'des' ],
@@ -49,6 +56,9 @@ $(document).ready(function () {
             {
                 "data": "url",
                 "render": function (data, type, row, meta) {
+                    if (type === 'rawExport') {
+                        return data;
+                    }
                     return '<a href="' + data + '" target="_blank">Read the full text</a>';
                 }
 
@@ -57,7 +67,7 @@ $(document).ready(function () {
             {
                 "data": "tags",
                 "render": function (data, type, row, meta) {
-                    return data = data.replace(/,_|_|,/g, " <br/>" )
+                    return data = data.replace(/,_|_|,/g, " <br/>")
 
 
 
