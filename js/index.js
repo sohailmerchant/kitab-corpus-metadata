@@ -70,11 +70,18 @@ $(document).ready(function () {
                     return data = data.replace(/,_|_|,/g, " <br/>")
 
 
-
-
-
-
                 }
+            },
+            {
+                "data": "srt",
+                "render": function (data, type, row, meta) {
+                    if (type === 'rawExport') {
+                        return data;
+                    }
+                    return '<a href="' + data + '" target="_blank">Download the SRT File(s)</a>';
+                }
+
+
             }
         ]
     });
