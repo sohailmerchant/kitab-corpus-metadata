@@ -1,5 +1,5 @@
 $(document).ready(function () {
-
+    var srtContainer;
     $('#example').DataTable({
         "autoWidth": false,
         "pageLength": 50,
@@ -73,12 +73,17 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": "srt",
+                "data": "srts",
                 "render": function (data, type, row, meta) {
                     if (type === 'rawExport') {
                         return data;
                     }
-                    return '<a href="' + data + '" target="_blank">Download the SRT File(s)</a>';
+
+                    srtContainer = '<div> <a href="' + data[0] + '" target="_blank"> October 2017 </a> <br/> <a href="'
+                        + data[1] + '" target="_blank">Feburary 2019</a> <br/><a href="'
+                        + data[2] + '" target="_blank">May 2019 (Aggregated)</a> </div>'
+
+                    return srtContainer
                 }
 
 
