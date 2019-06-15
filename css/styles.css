@@ -18,6 +18,21 @@ font-size: 13px!important;
 
 }
 
+.bug{
+  color: #d3d3d3
+}
+
+.bug:hover{
+
+  color:tomato;
+}
+
+.bugspan{
+
+  float: right;
+  padding: 3px;
+}
+
 .heading{
 
   float: left;

@@ -23,8 +23,22 @@ $(document).ready(function () {
         "ajax": "db/kitab-openITI.json",
         "columns": [
             //  { "data": "versionUri" },
-            { "data": "id" },
+
+            {
+                "data": "id",
+                "render": function (data, type, row, meta) {
+
+                    var fullbookuri = row['url'].split('/')[9];
+                    return data +
+                        "<span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=enhancement&template=change-uri.md&title=" + fullbookuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
+
+                }
+
+
+            },
+
             { "data": "date" },
+
             {
                 "data": "author",
                 "render": function (data, type, row, meta) {
@@ -47,8 +61,12 @@ $(document).ready(function () {
             {
                 "data": "status",
                 "render": function (data, type, row, meta) {
+                    data.toUpperCase();
 
-                    return data.toUpperCase();
+                    var fullbookuri = row['url'].split('/')[9];
+                    return data + " <span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=question&template=pri-vs-sec.md&title=" + fullbookuri + "' target=_blank title='Change Text Status - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
+
+
                 }
 
             },
@@ -59,7 +77,9 @@ $(document).ready(function () {
                     if (type === 'rawExport') {
                         return data;
                     }
-                    return '<a href="' + data + '" target="_blank">Read the full text</a>';
+                    var fullbookuri = row['url'].split('/')[9];
+                    
+                    return '<a href="' + data + '" target="_blank">Read the full text</a>' + "<span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "' target=_blank title='Full Text Issue - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
                 }
 
 
