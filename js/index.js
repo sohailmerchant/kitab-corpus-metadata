@@ -61,9 +61,9 @@ $(document).ready(function () {
             {
                 "data": "status",
                 "render": function (data, type, row, meta) {
-                    data.toUpperCase();
-
+                    data = data.toUpperCase();
                     var fullbookuri = row['url'].split('/')[9];
+                    //return data.toUpperCase(); 
                     return data + " <span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=question&template=pri-vs-sec.md&title=" + fullbookuri + "' target=_blank title='Change Text Status - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
 
 
