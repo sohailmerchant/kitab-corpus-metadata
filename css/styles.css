@@ -12,6 +12,7 @@ word-wrap: break-word;
 
 } 
 
+
 table{
 font-size: 13px!important;
 /* table-layout:fixed; */
@@ -19,25 +20,35 @@ font-size: 13px!important;
 }
 
 .bug{
-  color: #d3d3d3
+  color: #d3d3d3;
+  padding-right: 5px;
 }
 
 .bug:hover{
 
   color:tomato;
+  text-decoration: none!important
+}
+  .issues a:hover {
+  text-decoration: none!important;
+  font-size: 16px!important;
 }
 
 .bugspan{
 
   float: right;
   padding: 3px;
+
+
 }
+
+
 
 .heading{
 
   float: left;
    height: 100px;
-   width: 80%; 
+   width: 90%; 
   border-bottom: 1px #f8f9fa solid; 
   margin-top: 20px; 
   margin-left: 10px;
@@ -63,7 +74,15 @@ input[type="search"]
 
 }
 .btn-secondary{
-
   background-color: #f8f9fa!important;
-  color: #007bff!important;
+  color:black!important;
+  font-weight: 300!important;
+  margin-right: 5px;
+  border-radius: .25rem!important;
+  border-color: black!important;
+}
+
+.btn-secondary:hover{
+  color: black!important;
+  font-weight: 500!important;
 }
