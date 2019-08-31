@@ -24,14 +24,10 @@ var table;
 //     return JSON.stringify(result);
 // }
 
-
-
-
-
-
 $(document).ready(function () {
 
     var return_first;
+    var myData = [];
 
     var srtContainer;
 
@@ -83,7 +79,7 @@ $(document).ready(function () {
         //"orderFixed": [ 2, 'des' ],
         //"processing": true,
         //"ajax": "db/jsoncsv.json",
-
+        "deferRender": true,
         "ajax": {
             //async: false,
             //     'type': "GET",
@@ -95,6 +91,9 @@ $(document).ready(function () {
 
 
 
+        },
+        "initComplete": function (settings, json) {
+            getdata(json);
         },
 
         // "initComplete":function( settings, data){
@@ -161,14 +160,14 @@ $(document).ready(function () {
                         return data;
                     }
                     var fullbookuri = row['url'].split('/')[9];
-                    var defaultLink = '<a href="' + data + '" target="_blank">Read the full text</a><br/><br/>' ;
+                    var defaultLink = '<a href="' + data + '" target="_blank">Read the full text</a><br/><br/>';
                     var opentag = '<span class="issues">'
                     var textQuality = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "'target=_blank title='Full Text Quality Issue - raise issue on GitHub'> <i class='fas fa-bug bug' aria-hidden='true'></i></a>";
-                    var inProgress  = " <a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=in+progress&template=in-progress.md&title=IN+PROGRESS: " + fullbookuri + "'target=_blank title='Report Text In Progress  - raise issue on GitHub'> <i class='fas fa-clock bug' aria-hidden='true'></i></a>";
+                    var inProgress = " <a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=in+progress&template=in-progress.md&title=IN+PROGRESS: " + fullbookuri + "'target=_blank title='Report Text In Progress  - raise issue on GitHub'> <i class='fas fa-clock bug' aria-hidden='true'></i></a>";
                     var completedText = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "'target=_blank title='Report Text Tagged - raise issue on GitHub'> <i class='fas fa-check bug'aria-hidden='true' ></i></a>";
                     var endtag = '</span>'
-                    return defaultLink+opentag+textQuality+completedText+inProgress+endtag
-                    
+                    return defaultLink + opentag + textQuality + completedText + inProgress + endtag
+
                     //return '<a href="' + data + '" target="_blank">Read the full text</a>' + "<span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "' target=_blank title='Full Text Issue - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
                 }
 
@@ -185,6 +184,7 @@ $(document).ready(function () {
             {
                 "data": null,
                 "render": function (data, type, row, meta) {
+                    //console.log(meta.row);
                     var new_id = data['url'].split('/')[9].split('.')[2];
                     //console.log(new_id);
 
@@ -211,20 +211,27 @@ $(document).ready(function () {
 
     });
 
-
-
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     function getdata(response) {
-        return_first = response.data;
-        return response;
+        //console.log(response);
+        return_first = response;
+        
+        console.log(return_first.data);
+        myData['rowCount']= return_first.data.length;
+        myData['primaryBookCount'] = return_first.data.length;
+        myData['primaryBooks'] = return_first.data.filter(function(data) {
+           return data.status == "pri";
+           
+        });
+       // myData.primaryBooks = Object.filter(myData, status => status ='pri');
 
     }
 
-
-
+    var p = myData
+    console.log(p);
 
     // console.log("outside:  ", return_first)
     // console.log(totalRecords)
