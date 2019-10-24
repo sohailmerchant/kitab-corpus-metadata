@@ -186,7 +186,7 @@ $(document).ready(function () {
                     var changeUri = "<a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=enhancement&template=change-uri.md&title=" + fullbookuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>"
                     var endtag = '</span>'
                     
-                    return defaultLink + "<strong>Raise a issue/report: </strong> <br/>" + opentag +changeUri+ textQuality + completedText + inProgress + endtag
+                    return defaultLink + "<strong>Raise an issue/report: </strong> <br/>" + opentag +changeUri+ textQuality + completedText + inProgress + endtag
 
                     //return '<a href="' + data + '" target="_blank">Read the full text</a>' + "<span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "' target=_blank title='Full Text Issue - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
                 }
