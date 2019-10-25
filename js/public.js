@@ -30,7 +30,7 @@ $(document).ready(function () {
         z = z || '0';
         n = n + '';
         return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-      }
+    }
 
     var return_first;
     var myData = [];
@@ -116,7 +116,7 @@ $(document).ready(function () {
                 "render": function (data, type, row, meta) {
                     data = data
                     var fullbookuri = row['url'].split('/')[9];
-                    return data ;
+                    return data;
 
                 }
 
@@ -130,13 +130,13 @@ $(document).ready(function () {
                 "data": "author",
                 "render": function (data, type, row, meta) {
                     s = data.substring(4);
-                    d = data.substring(0,4);
-                    d = pad(Math.ceil(d / 25) * 25,4)
-                    a = 'https://raw.githubusercontent.com/OpenITI/'+d+'AH'+'/master/data/'+data+'/'+data+'.yml'
-                    
+                    d = data.substring(0, 4);
+                    d = pad(Math.ceil(d / 25) * 25, 4)
+                    a = 'https://raw.githubusercontent.com/OpenITI/' + d + 'AH' + '/master/data/' + data + '/' + data + '.yml'
+
                     s = s.replace(/([A-Z])/g, ' $1').trim();
-                    f = "<a href ='" +a+"' target=_blank>"+s+"</a>"
-                   
+                    f = "<a href ='" + a + "' target=_blank>" + s + "</a>"
+
                     return f;
                     //return s = s.replace(/([A-Z])/g, ' $1').trim();
 
@@ -150,8 +150,8 @@ $(document).ready(function () {
                     var i = data.indexOf('.')
                     data = data.substring(i + 1);
                     data = data.replace(/([A-Z])/g, ' $1').trim();
-                    f = "<a href ='" +row['url']+".yml' target=_blank>"+data+"</a>"
-                    
+                    f = "<a href ='" + row['url'] + ".yml' target=_blank>" + data + "</a>"
+
                     return f
 
                 }
@@ -174,9 +174,7 @@ $(document).ready(function () {
             {
                 "data": "url",
                 "render": function (data, type, row, meta) {
-                    if (type === 'rawExport') {
-                        return data;
-                    }
+
                     var fullbookuri = row['url'].split('/')[9];
                     var defaultLink = '<a href="' + data + '" target="_blank">Read the full text</a><br/><br/>';
                     var opentag = '<span class="issues">'
@@ -185,44 +183,15 @@ $(document).ready(function () {
                     var completedText = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+tagged&template=submission-report--for-pull-requests-.md&title=" + fullbookuri + "'target=_blank title='Report Text Tagged - raise issue on GitHub'> <i class='fas fa-tag bug'aria-hidden='true' ></i></a>";
                     var changeUri = "<a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=enhancement&template=change-uri.md&title=" + fullbookuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>"
                     var endtag = '</span>'
-                    
-                    return defaultLink + "<strong>Raise an issue/report: </strong> <br/>" + opentag +changeUri+ textQuality + completedText + inProgress + endtag
 
-                    //return '<a href="' + data + '" target="_blank">Read the full text</a>' + "<span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "' target=_blank title='Full Text Issue - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
-                }
-
-
-            },
-            {
-                "data": "tags",
-                "render": function (data, type, row, meta) {
-                    return data = data.replace(/,_|_|,/g, " <br/>")
-
-
-                }
-            },
-            {
-                "data": null,
-                "render": function (data, type, row, meta) {
-                    //console.log(meta.row);
-                    var new_id = data['url'].split('/')[9].split('.')[2];
-                    //console.log(new_id);
-
-                    var srtsLinks = {
-                        Oct17: 'http://dev.kitab-project.org/passim1017/' + data['id'],
-                        Feb19: 'http://dev.kitab-project.org/passim01022019/' + new_id,
-                        Aggregated: 'http://dev.kitab-project.org/aggregated01052019/' + new_id
-                    }
                     if (type === 'rawExport') {
-                        return srtsLinks;
+                        return row['url']
                     }
+                    else {
 
-
-                    srtContainer = '<div> <a href="' + srtsLinks.Oct17 + '" target="_blank"> October 2017 </a> <br/> <a href="'
-                        + srtsLinks.Feb19 + '" target="_blank">Feburary 2019</a> <br/><a href="'
-                        + srtsLinks.Aggregated + '" target="_blank">May 2019 (Aggregated)</a> </div>'
-
-                    return srtContainer
+                        return defaultLink + "<strong>Raise an issue/report: </strong> <br/>" + opentag + changeUri + textQuality + completedText + inProgress + endtag
+                    }
+                    //return '<a href="' + data + '" target="_blank">Read the full text</a>' + "<span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "' target=_blank title='Full Text Issue - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
                 }
 
 
@@ -238,23 +207,23 @@ $(document).ready(function () {
     function getdata(response) {
         //console.log(response);
         return_first = response;
-        
-       // console.log(return_first.data);
-        myData['rowCount']= return_first.data.length;
+
+        // console.log(return_first.data);
+        myData['rowCount'] = return_first.data.length;
         myData['primaryBookCount'] = return_first.data.length;
-        myData['primaryBooks'] = return_first.data.filter(function(data) {
-           return data.status == "pri";
-           
-           
+        myData['primaryBooks'] = return_first.data.filter(function (data) {
+            return data.status == "pri";
+
+
         });
-       // myData.primaryBooks = Object.filter(myData, status => status ='pri');
-       //console.log(JSON.stringify(myData.rowCount));
+        // myData.primaryBooks = Object.filter(myData, status => status ='pri');
+        //console.log(JSON.stringify(myData.rowCount));
     }
 
     //var p = myData
     //console.log(myData);
     var p = myData;
-    function fetch1(d){
+    function fetch1(d) {
         return c = d;
 
     }
@@ -263,9 +232,9 @@ $(document).ready(function () {
     //console.log(JSON.stringify(myObj.rowCount));
 
     //console.log(myData);
-    
+
     //console.log(Object.keys(myData))
-        //console.log('p:',p['rowCount'])
+    //console.log('p:',p['rowCount'])
 
     // console.log("outside:  ", return_first)
     // console.log(totalRecords)
