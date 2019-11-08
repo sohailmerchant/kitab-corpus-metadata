@@ -218,8 +218,8 @@ $(document).ready(function () {
                     }
 
 
-                    srtContainer = '<div> <a href="' + srtsLinks.Oct17 + '" target="_blank"> October 2017 </a> <br/> <a href="'
-                        + srtsLinks.Feb19 + '" target="_blank">Feburary 2019</a> <br/><a href="'
+                    srtContainer = '<div> <a href="' + srtsLinks.Oct17 + '" target="_blank"> October 2017 (V1) </a> <br/> <a href="'
+                        + srtsLinks.Feb19 + '" target="_blank">Feburary 2019 (V2) </a> <br/><a href="'
                         + srtsLinks.Aggregated + '" target="_blank">May 2019 (Aggregated)</a> </div>'
 
                     return srtContainer
