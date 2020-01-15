@@ -1,7 +1,7 @@
 
 
 //var url = "https://raw.githubusercontent.com/sohailmerchant/js-dev-env/master/kitab-openITI.json"
-var url = "https://raw.githubusercontent.com/OpenITI/Annotation/master/OpenITI_metadata_light.json"
+//var url = "https://raw.githubusercontent.com/OpenITI/Annotation/master/OpenITI_metadata_light.json"
 //var urlcsv = "https://raw.githubusercontent.com/OpenITI/Annotation/master/OpenITI_metadata_light.csv"
 //var totalRecords;
 var table;
@@ -55,16 +55,16 @@ $(document).ready(function () {
     table = $('#example').DataTable({
 
 
-       "sDom": '<"wrapper"lfptip>',
-       
+        "sDom": '<"wrapper"lfptip>',
+
         "autoWidth": false,
 
         "createdRow": function (row, data, dataIndex) {
 
-            if (data['url'].includes('completed') || data['url'].includes('inProgress') || data['url'].includes('mARkdown') ) {
-                  
+            if (data['url'].includes('completed') || data['url'].includes('inProgress') || data['url'].includes('mARkdown')) {
+
                 $(row).addClass('completed');
-             
+
 
             }
 
@@ -102,7 +102,7 @@ $(document).ready(function () {
         //"orderFixed": [ 2, 'des' ],
         //"processing": true,
         "ajax": "db/arabic-metadata-pv.json",
-    
+
 
 
         // "ajax": {
@@ -115,23 +115,27 @@ $(document).ready(function () {
 
 
 
-            
-            { "data": 'id',
-            
-            "render": function(data, type, row){
 
-             if(row['status']==='pri'){
+            {
+                "data": 'id',
 
-               // return  "<div>" + row['id'] + "<br/>" + row['status'].toUpperCase() + "</div>";
-               return  "<div>" + row['id'] + "<br/> <i class='fas fa-record-vinyl pri' title='"+ row['status'] + "'></i></div>";
-             }else{
-                return  "<div>" + row['id'] + "<br/> <i class='fas fa-record-vinyl sec' title='"+ row['status'] + "'></i></div>";
-             
-             }
+                "render": function (data, type, row) {
 
-            }
+                    var defaultLink = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '">' + data + '</a><br/></strong>' + row['title'];
+
+                    if (row['status'] === 'pri') {
+
+                        // return  "<div>" + row['id'] + "<br/>" + row['status'].toUpperCase() + "</div>";
+                        return "<div>" + defaultLink + "<br/> <i class='fas fa-record-vinyl pri' title='" + row['status'] + "'></i></div>";
+                    } else {
+                        return "<div>" + defaultLink + "<br/> <i class='fas fa-record-vinyl sec' title='" + row['status'] + "'></i></div>";
+
+                    }
+
+                }
             },
-            
+
+         
 
             {
                 "data": "book",
@@ -141,15 +145,18 @@ $(document).ready(function () {
                         return data;
                     }
 
-
-
+                    d = data.substring(0,4);
+                    d = pad(Math.ceil(d / 25) * 25,4)
+                    bookFolderUrl = 'https://github.com/OpenITI/'+d+'AH'+'/tree/master/data/'+ data.split(".")[0]+ "/" + data
+                    //console.log(bookFolderUrl)
+        
                     var i = data.indexOf('.')
                     data = data.substring(i + 1);
                     data = data.replace(/([A-Z])/g, ' $1').trim();
 
                     var fullbookuri = row['url'].split('/')[9];
-
-                    var defaultLink = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '">' + data + '</a><br/></strong>' + row['title'];
+                    
+                    var defaultLink = '<strong><a href="' + bookFolderUrl + '" target="_blank" title="' + bookFolderUrl + '">' + data + '</a><br/></strong>' + row['title'];
 
                     if (row['url'].includes('.completed')) {
 
@@ -177,14 +184,25 @@ $(document).ready(function () {
             {
                 "data": "author",
                 "render": function (data, type, row, meta) {
-                    d = data.substring(4);
-                    // d = data.substring(0,4);
-                    // d = pad(Math.ceil(d / 25) * 25,4)
-                    // a = 'https://raw.githubusercontent.com/OpenITI/'+d+'AH'+'/master/data/'+data+'/'+data+'.yml'
 
+                    if (type === 'rawExport') {
+                        return data;
+                    }
+
+                    d = data.substring(0,4);
+                    d = pad(Math.ceil(d / 25) * 25,4)
+                    authorUrl = 'https://github.com/OpenITI/'+d+'AH'+'/tree/master/data/'+ data.split("::")[0]
+                    //console.log(authorUrl)
+                   
+                    d = data.substring(4);
+                    
+                    
                     d = d.replace(/([A-Z])/g, ' $1').trim();
                     //f = "<a href ='" +a+"' target=_blank>"+s+"</a>"
-                    return "<div class='author text-wrap'>" + d.split("::")[0] + "<br/>" + d.split("::")[1] + "</div>";
+                    var authorLink = '<strong><a href="' + authorUrl + '" target="_blank" title="' + authorUrl + '">' + d.split("::")[0] + '</a></strong>';
+
+                    
+                    return "<div class='author text-wrap'>" + authorLink  + "<br/>" + d.split("::")[1] + "</div>";
 
                     //return s = s.replace(/([A-Z])/g, ' $1').trim();
 
@@ -211,7 +229,7 @@ $(document).ready(function () {
             //     "data": "status",
             //     "render": function (data, type, row, meta) {
             //         return data.toUpperCase();
-                            
+
             //     }
             // },
 
@@ -219,10 +237,18 @@ $(document).ready(function () {
                 "data": "Edition",
                 "render": function (data, type, row, meta) {
                     data = checknull(data)
-                    
-                    data = data.replace(/::|:: ::/g, " ");
 
-                    return data
+                    //data = data.replace(/::|:: ::/g, " ");
+                    ee = checknull(row['Edition:Editor'])
+                   
+                    console.log(ee)
+
+                    editorDiv = '<div class="editor"> Editor: '+ ee + '</div><br/>'
+
+                    if (ee==""){
+                        return data;
+                    }
+                    return data + editorDiv
 
                     // return "<div class='text-wrap'>" + data + "</div>";
 
@@ -232,27 +258,27 @@ $(document).ready(function () {
 
             },
 
-            {
-                "data": "Edition:Editor",
-                "render": function (data, type, row, meta) {
-                    data = checknull(data)
-                    //data = data.replace(/::|::::/g, "<br/> ");
+            // {
+            //     "data": "Edition:Editor",
+            //     "render": function (data, type, row, meta) {
+            //         data = checknull(data)
+            //         //data = data.replace(/::|::::/g, "<br/> ");
 
-                    return data
+            //         return data
 
-                    // return "<div class='text-wrap'>" + data + "</div>";
+            //         // return "<div class='text-wrap'>" + data + "</div>";
 
 
-                }
+            //     }
 
-            },
+            // },
 
             {
                 "data": "tags",
                 "render": function (data, type, row, meta) {
-                    tags = data.replace(/;_|_|;/g, " ");
+                    tags = data.replace(/;_|_|;/g, "; ");
                     Atags = checknull(row['classification']);
-                    Atags = Atags.replace(/::|_|;/g, " ");
+                    Atags = Atags.replace(/::|_|;/g, ":: ");
 
                     return "<div class='tag text-wrap'>" + tags + "<br/>" + Atags + "</div>";
 
@@ -280,7 +306,7 @@ $(document).ready(function () {
 
 
 
-           
+
             // {
             //     "data": null,
             //     "render": function (data, type, row, meta) {
@@ -312,7 +338,7 @@ $(document).ready(function () {
 
     });
 
-   
+
 
 });
 
