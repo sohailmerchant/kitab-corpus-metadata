@@ -7,13 +7,19 @@ th{
 
   text-align: left;
 }
+
 td {
 word-wrap: break-word;
 
 } 
+.editor{
 
+  direction: ltr;
+  margin-top: 5px;
+  text-align: right;
+}
 
-table td:last-child{
+.arabic table td:last-child{
   
   font-size: 10px;
 }
@@ -51,7 +57,7 @@ font-size: 15px!important;
 }
 
 .bug{
-  color: #4a69bb;
+  color: #d3d3d3;
   padding-right: 5px;
 }
 td a{
