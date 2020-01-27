@@ -253,7 +253,7 @@ $(document).ready(function () {
                     var split_url = row['url'].split('/');
                     var versionuri = split_url[split_url.length - 1];
                     var authoruri = versionuri.split(".")[0];
-                    var intro = '<div class="add-issue">Raise an Author issue <br/>';
+                    var intro = '<div class="add-issue">Raise an author issue <br/>';
                     var opentag = '<span class="issues">';
                     var changeUri = issueURItempl + authoruri + "' target=_blank title='Change URI - raise issue on GitHub'>";
                     changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
