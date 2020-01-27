@@ -1,28 +1,6 @@
-
-
-//var url = "https://raw.githubusercontent.com/sohailmerchant/js-dev-env/master/kitab-openITI.json"
-//var url = "https://raw.githubusercontent.com/OpenITI/Annotation/master/OpenITI_metadata_light.json"
-//var urlcsv = "https://raw.githubusercontent.com/OpenITI/Annotation/master/OpenITI_metadata_light.csv"
-//var totalRecords;
 var table;
-
-// function csvJSON(csv) {
-//     var lines = csv.split("\n");
-//     var result = [];
-//     var headers = lines[0].split(",");
-
-//     for (var i = 1; i < lines.length; i++) {
-//         var obj = {};
-//         var currentline = lines[i].split(",");
-
-//         for (var j = 0; j < headers.length; j++) {
-//             obj[headers[j]] = currentline[j];
-//         }
-//         result.push(obj);
-//     }
-//     //JSON object
-//     return JSON.stringify(result);
-// }
+var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
+issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
 
 $(document).ready(function () {
 
@@ -32,12 +10,9 @@ $(document).ready(function () {
         return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
     }
 
-    // var return_first;
-    // var myData = [];
 
     var srtContainer;
     var count;
-
 
     function checknull(data) {
 
@@ -50,27 +25,21 @@ $(document).ready(function () {
 
     }
 
-
-
     table = $('#example').DataTable({
 
-
-        "sDom": '<"wrapper"lfptip>',
-
+        //"sDom": '<"wrapper"lfptip>',
+        "sDom": "<'row rowpadding'B><'row'><'row'<'col-md-6'ilp><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'<'#colvis'>p>",
         "autoWidth": false,
 
         "createdRow": function (row, data, dataIndex) {
-
-            if (data['url'].includes('completed') || data['url'].includes('inProgress') || data['url'].includes('mARkdown')) {
-
+            /*if (data['url'].includes('completed') || data['url'].includes('inProgress') || data['url'].includes('mARkdown')) {
                 $(row).addClass('completed');
+            }*/
 
-
+            if (data['status'].includes('pri')) {
+                $('tr').addClass('.primary_book')
             }
-
         },
-
-
 
         "pageLength": 50,
         "colReorder": true,
@@ -84,8 +53,23 @@ $(document).ready(function () {
                 filename: 'kitab-corpusmetadata',
                 stripHtml: true,
                 exportOptions: { orthogonal: 'rawExport' },
+            },
+            {
 
+                text: 'Primary Books Only',
+                className: 'btn btn-light',
+                action: function (e, dt, node, config) {
 
+                    $.fn.dataTable.ext.search.push(
+                        function (settings, data, dataIndex) {
+                            console.log(data[7])
+                            return data[7].trim() == 'pri'
+
+                        }
+                    )
+                    table.draw();
+                    $.fn.dataTable.ext.search.pop();
+                }
             },
 
 
@@ -95,47 +79,78 @@ $(document).ready(function () {
                     table.draw();
                 }
             },
-
-
         ],
-
-        //"orderFixed": [ 2, 'des' ],
-        //"processing": true,
-        "ajax": "db/arabic-metadata-pv.json",
-
-
-
-        // "ajax": {
-        //     //async: false,
-        //     //     'type': "GET",
-        //     //     'dataType': 'text',
-        //     'url': url,
+        "deferRender": true,
+        "ajax": "db/OpenITI_metadata_light-arabic.json",
 
         "columns": [
-
-
-
-
             {
                 "data": 'id',
-
                 "render": function (data, type, row) {
-
-                    var defaultLink = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '">' + data + '</a><br/></strong>' + row['title'];
-
-                    if (row['status'] === 'pri') {
-
-                        // return  "<div>" + row['id'] + "<br/>" + row['status'].toUpperCase() + "</div>";
-                        return "<div>" + defaultLink + "<br/> <i class='fas fa-record-vinyl pri' title='" + row['status'] + "'></i></div>";
-                    } else {
-                        return "<div>" + defaultLink + "<br/> <i class='fas fa-record-vinyl sec' title='" + row['status'] + "'></i></div>";
-
+                    if (type === 'rawExport') {
+                        return data;
                     }
 
+                    // add color-coded marker for annotation status of the version:
+                    var ext = row["url"].split(".")[row["url"].split(".").length - 1];
+                    if (ext === 'completed') {
+                        var cellContent = " <i class='fas fa-record-vinyl " + ext + "' title='Annotation completed'></i>";
+                    } else if (ext === 'mARkdown') {
+                        var cellContent = " <i class='fas fa-record-vinyl " + ext + "' title='Annotation completed and vetted'></i>";
+                    } else if (ext === 'inProgress') {
+                        var cellContent = " <i class='fas fa-record-vinyl " + ext + "' title='Annotation in progress'></i>";
+                    } else {
+                        var cellContent = " <i class='fas fa-record-vinyl not-annotated' title='Not yet annotated'></i>";
+                    }
+
+                    // add version ID + link to the full text
+                    cellContent += '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a><br/></strong>'
+
+                    // add Arabic title of the book
+                    cellContent += row['title'];
+
+                    // add info about the primary/secondary status of the version:
+                    if (row['status'] === 'pri') {
+                        cellContent += '<p title="This is the primary version of this text">PRI</p>'
+                    } else {
+                        cellContent += '<p title="This is the secondary version of this text">SEC</p>'
+                    }
+
+                    // add links to issues related to this text version:
+                    if (row["version_issues"].length > 0) {
+                        var tag = '<span class="extant issues">';
+                        //console.log(row["book"] + ": ");
+                        //console.log(row["version_issues"])
+                        row["version_issues"].forEach(function (item) {
+                            if (item[1] === "URI change suggestion") {
+                                var changeUri = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0] + "' target=_blank title='Change URI issue " + item[0] + " on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>"
+                                tag += changeUri;
+                            } else if (item[1] === "PRI & SEC Versions") {
+                                var priSec = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0] + "' target=_blank title='Switch primary/secondary issue " + item[0] + " on GitHub'> <i class='fas fa-retweet-alt bug' aria-hidden='true'></i></a>";
+                                tag += priSec;
+                            } else if (item[1] === "text quality") {
+                                var textQual = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0] + "' target=_blank title='Text quality issue " + item[0] + " on GitHub'> <i class='fas fa-bug' aria-hidden='true'></i></a>";
+                                tag += textQual;
+                            }
+                        });
+                        cellContent += tag + '<br/></span>';
+                    }
+
+                    // wrap the current contents in a div; vertically aligned with the top
+                    cellContent = '<div>' + cellContent + "<br/><br/><br/></div>";
+
+                    // add a new div, vertically aligned with the bottom, with links to raise issues:
+                    var versionuri = row['url'].split('/')[9];
+                    var opentag = '<span class="issues">';
+                    var textQuality = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + versionuri + "'target=_blank title='Full Text Quality Issue - raise issue on GitHub'> <i class='fas fa-bug bug' aria-hidden='true'></i></a>";
+                    var inProgress = " <a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=in+progress&template=in-progress.md&title=IN+PROGRESS: " + versionuri + "'target=_blank title='Report Text In Progress  - raise issue on GitHub'> <i class='fas fa-tasks bug' aria-hidden='true'></i></a>";
+                    var completedText = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+tagged&template=submission-report--for-pull-requests-.md&title=" + versionuri + "'target=_blank title='Report Text Tagged - raise issue on GitHub'> <i class='fas fa-tag bug'aria-hidden='true' ></i></a>";
+                    var changeUri = issueURItempl + versionuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
+                    var endtag = '</span>';
+
+                    return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + completedText + inProgress + endtag + "</div>";
                 }
             },
-
-         
 
             {
                 "data": "book",
@@ -144,41 +159,54 @@ $(document).ready(function () {
                     if (type === 'rawExport') {
                         return data;
                     }
+                    var cellContent = '<div><strong>'
 
-                    d = data.substring(0,4);
-                    d = pad(Math.ceil(d / 25) * 25,4)
-                    bookFolderUrl = 'https://github.com/OpenITI/'+d+'AH'+'/tree/master/data/'+ data.split(".")[0]+ "/" + data
+                    // make link to book folder on GitHub:
+                    d = data.substring(0, 4);
+                    d = pad(Math.ceil(d / 25) * 25, 4)
+                    bookFolderUrl = 'https://github.com/OpenITI/' + d + 'AH' + '/tree/master/data/' + data.split(".")[0] + "/" + data
                     //console.log(bookFolderUrl)
-        
+                    cellContent += '<a href="' + bookFolderUrl + '" target="_blank" title="' + bookFolderUrl + '">'
+
+                    // make Latin version of book title and add to cellContent:
                     var i = data.indexOf('.')
                     data = data.substring(i + 1);
                     data = data.replace(/([A-Z])/g, ' $1').trim();
+                    cellContent += data + '</a><br/></strong>' + row['title'];
 
-                    var fullbookuri = row['url'].split('/')[9];
-                    
-                    var defaultLink = '<strong><a href="' + bookFolderUrl + '" target="_blank" title="' + bookFolderUrl + '">' + data + '</a><br/></strong>' + row['title'];
 
-                    if (row['url'].includes('.completed')) {
-
-                        $('tr').addClass('completed')
-
+                    //
+                    if (row["book_issues"].length > 0) {
+                        var tag = '<span class="extant issues">';
+                        row["book_issues"].forEach(function (item) {
+                            if (item[1] === "URI change suggestion") {
+                                var changeUri = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0] + "' target=_blank title='Change URI issue " + item[0] + " on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>"
+                                tag += changeUri;
+                            } else if (item[1] === "text quality") {
+                                var textQual = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0] + "' target=_blank title='Text quality issue " + item[0] + " on GitHub'> <i class='fas fa-bug' aria-hidden='true'></i></a>";
+                                tag += textQual;
+                                //console.log("Text quality issue: "+row["book"]);
+                            }
+                        });
+                        cellContent += "<br/>" + tag + '</span>';
                     }
 
-                    var opentag = '<span class="issues">'
-                    var textQuality = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "'target=_blank title='Full Text Quality Issue - raise issue on GitHub'> <i class='fas fa-bug bug' aria-hidden='true'></i></a>";
-                    var inProgress = " <a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=in+progress&template=in-progress.md&title=IN+PROGRESS: " + fullbookuri + "'target=_blank title='Report Text In Progress  - raise issue on GitHub'> <i class='fas fa-tasks bug' aria-hidden='true'></i></a>";
-                    var completedText = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+tagged&template=submission-report--for-pull-requests-.md&title=" + fullbookuri + "'target=_blank title='Report Text Tagged - raise issue on GitHub'> <i class='fas fa-tag bug'aria-hidden='true' ></i></a>";
-                    var changeUri = "<a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=enhancement&template=change-uri.md&title=" + fullbookuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>"
-                    var endtag = '</span>'
+                    // close first part of the cell content,
+                    // to be vertically aligned with the top of the cell
+                    cellContent += '<br/><br/><br/></div>'
 
-                    return defaultLink + "<br/><br/>Raise an issue/report <br/>" + opentag + changeUri + textQuality + completedText + inProgress + endtag
+                    // make link to raise issue with the book title URI:
+                    var split_url = row['url'].split('/');
+                    var versionuri = split_url[split_url.length - 1];
+                    var bookuri = versionuri.split(".").slice(0, 2).join(".");
+                    var intro = '<div class="add-issue">Raise a issue for book title <br/>';
+                    var opentag = '<span class="issues">';
+                    var changeUri = issueURItempl + bookuri + "' target=_blank title='Change URI - raise issue on GitHub'>";
+                    changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
+                    var endtag = '</span>';
 
-                    //return '<a href="' + data + '" target="_blank">Read the full text</a>' + "<span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "' target=_blank title='Full Text Issue - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
+                    return cellContent + intro + opentag + changeUri + endtag;
                 }
-
-
-
-
             },
 
             {
@@ -189,193 +217,108 @@ $(document).ready(function () {
                         return data;
                     }
 
-                    d = data.substring(0,4);
-                    d = pad(Math.ceil(d / 25) * 25,4)
-                    authorUrl = 'https://github.com/OpenITI/'+d+'AH'+'/tree/master/data/'+ data.split("::")[0]
-                    //console.log(authorUrl)
-                   
-                    d = data.substring(4);
-                    
-                    
-                    d = d.replace(/([A-Z])/g, ' $1').trim();
-                    //f = "<a href ='" +a+"' target=_blank>"+s+"</a>"
-                    var authorLink = '<strong><a href="' + authorUrl + '" target="_blank" title="' + authorUrl + '">' + d.split("::")[0] + '</a></strong>';
+                    // make link to author folder on GitHub:
+                    d = row["book"].substring(0, 4);
+                    d = pad(Math.ceil(d / 25) * 25, 4);
+                    authorUrl = 'https://github.com/OpenITI/' + d + 'AH' + '/tree/master/data/' + row["book"].split(".")[0];
+                    d = checknull(data);
+                    var authorLink = '<strong><a href="' + authorUrl + '" target="_blank" title="' + authorUrl + '">';
+                    authorLink += d.split("::")[0] + '</a></strong>';
+                    var authorDiv = "<div class='author text-wrap'>" + authorLink + "<br/>";
 
-                    
-                    return "<div class='author text-wrap'>" + authorLink  + "<br/>" + d.split("::")[1] + "</div>";
+                    // add the Arabic version(s) of the author name:
+                    if (d.split("::").length > 1) {
+                        authorDiv += d.split("::")[1];
+                    }
 
-                    //return s = s.replace(/([A-Z])/g, ' $1').trim();
+                    // add links to GitHub issues related to the author uri:
+                    if (row["author_issues"].length > 0) {
+                        var tag = '<span class="extant issues">';
+                        row["author_issues"].forEach(function (item) {
+                            if (item[1] === "URI change suggestion") {
+                                var issueUri = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0];
+                                issueUri += "' target=_blank title='Change URI issue " + item[0] + " on GitHub'>";
+                                issueUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
+                                tag += issueUri;
+                            }
+                        });
+                        authorDiv += "<br/>" + tag + '</span>';
+                    }
 
+                    // Close the first div of the cell,
+                    // to be aligned vertically with the top of the cell:
+                    authorDiv += '<br/><br/><br/></div>';
+
+                    // Add link to raise issues about the author URI:
+                    var split_url = row['url'].split('/');
+                    var versionuri = split_url[split_url.length - 1];
+                    var authoruri = versionuri.split(".")[0];
+                    var intro = '<div class="add-issue">Raise an Author issue <br/>';
+                    var opentag = '<span class="issues">';
+                    var changeUri = issueURItempl + authoruri + "' target=_blank title='Change URI - raise issue on GitHub'>";
+                    changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
+                    var endtag = '</span>';
+
+                    return authorDiv + intro + opentag + changeUri + endtag;
                 }
             },
-
-
 
             {
                 "data": "date",
                 render: function (data) {
 
-                    return "<div class='text-wrap'>" + checknull(data) + "</div>"
+                    return "<div class='text-wrap'>" + checknull(data) + "</div>";
                 }
             },
+
             {
                 "data": "length",
                 render: function (data) {
-
-                    return "<div class='text-wrap'>" + checknull(data) + "</div>"
+                    return "<div class='text-wrap'>" + checknull(data) + "</div>";
                 }
             },
-            // {
-            //     "data": "status",
-            //     "render": function (data, type, row, meta) {
-            //         return data.toUpperCase();
-
-            //     }
-            // },
 
             {
-                "data": "Edition",
+                "data": "ed_info",
                 "render": function (data, type, row, meta) {
-                    data = checknull(data)
-
-                    //data = data.replace(/::|:: ::/g, " ");
-                    ee = checknull(row['Edition:Editor'])
-                   
-                    console.log(ee)
-
-                    editorDiv = '<div class="editor"> Editor: '+ ee + '</div><br/>'
-
-                    if (ee==""){
+                    data = checknull(data);
+                    if (data == "") {
                         return data;
+                    } else {
+                        return '<div class="editor">' + data + '</div><br/>';
                     }
-                    return data + editorDiv
-
-                    // return "<div class='text-wrap'>" + data + "</div>";
-
-
                 }
-
-
             },
-
-            // {
-            //     "data": "Edition:Editor",
-            //     "render": function (data, type, row, meta) {
-            //         data = checknull(data)
-            //         //data = data.replace(/::|::::/g, "<br/> ");
-
-            //         return data
-
-            //         // return "<div class='text-wrap'>" + data + "</div>";
-
-
-            //     }
-
-            // },
 
             {
                 "data": "tags",
                 "render": function (data, type, row, meta) {
-                    tags = data.replace(/;_|_|;/g, "; ");
-                    Atags = checknull(row['classification']);
-                    Atags = Atags.replace(/::|_|;/g, ":: ");
-
-                    return "<div class='tag text-wrap'>" + tags + "<br/>" + Atags + "</div>";
-
-
+                    /*                    tags = data.replace(/;_|_|;/g, "; ");
+                                        Atags = checknull(row['classification']);
+                                        Atags = Atags.replace(/::|_|;/g, ":: ");
+                    
+                                        return "<div class='tag text-wrap'>" + tags + "<br/>" + Atags + "</div>";
+                                        */
+                    tags = checknull(data);
+                    tags = tags.replace(/;|_/g, "");
+                    return "<div class='tag text-wrap'>" + tags + "</div>";
                 }
 
-
+            },
+            {
+                "data": "status",
+                "visible": false
             },
 
+            {
+                "data": "url",
+                "visible": false
+            },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // {
-            //     "data": null,
-            //     "render": function (data, type, row, meta) {
-            //         //console.log(meta.row);
-            //         var new_id = data['url'].split('/')[9].split('.')[2];
-            //         //console.log(new_id);
-
-            //         var srtsLinks = {
-            //             Oct17: 'http://dev.kitab-project.org/passim1017/' + data['id'],
-            //             Feb19: 'http://dev.kitab-project.org/passim01022019/' + new_id,
-            //             Aggregated: 'http://dev.kitab-project.org/aggregated01052019/' + new_id
-            //         }
-            //         if (type === 'rawExport') {
-            //             return srtsLinks;
-            //         }
-
-
-            //         srtContainer = '<div> <a href="' + srtsLinks.Oct17 + '" target="_blank"> October 2017 (V1) </a> <br/> <a href="'
-            //             + srtsLinks.Feb19 + '" target="_blank">Feburary 2019 (V2) </a> <br/><a href="'
-            //             + srtsLinks.Aggregated + '" target="_blank">May 2019 (Aggregated)</a> </div>'
-
-            //         return srtContainer
-            //     }
-
-
-            // }
         ]
-
 
     });
 
 
 
 });
-
-// function format ( d ) {
-//     // `d` is the original data object for the row
-//     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-//         '<tr>'+
-//             '<td>Full name:</td>'+
-//             '<td>'+d.name+'</td>'+
-//         '</tr>'+
-//         '<tr>'+
-//             '<td>Extension number:</td>'+
-//             '<td>'+d.extn+'</td>'+
-//         '</tr>'+
-//         '<tr>'+
-//             '<td>Extra info:</td>'+
-//             '<td>And any further details here (images etc)...</td>'+
-//         '</tr>'+
-//     '</table>';
-// }
-
-// $('#example tbody').on('click', 'td.details-control', function () {
-//     var tr = $(this).closest('tr');
-//     var row = table.row( tr );
-
-//     if ( row.child.isShown() ) {
-//         // This row is already open - close it
-//         row.child.hide();
-//         tr.removeClass('shown');
-//     }
-//     else {
-//         // Open this row
-//         row.child( format(row.data()) ).show();
-//         tr.addClass('shown');
-//     }
-// } );
-
-
-
-
