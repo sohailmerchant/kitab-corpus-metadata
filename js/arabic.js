@@ -2,7 +2,19 @@ var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
 issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
 
+
+// Add Arabic font for pdfMake:
+pdfMake.fonts = {
+      Amiri: {
+              normal: 'Amiri-Regular.ttf',
+              bold: 'Amiri-Bold.ttf',
+              italics: 'Amiri-Slanted.ttf',
+              bolditalics: 'Amiri-BoldSlanted.ttf'
+      }
+}
+
 $(document).ready(function () {
+
 
     function pad(n, width, z) {
         z = z || '0';
@@ -47,7 +59,16 @@ $(document).ready(function () {
         buttons: [
             'copyHtml5',
             'excelHtml5',
-            'pdfHtml5',
+            //'pdfHtml5',
+            // Add Arabic font for pdfMake:
+            // See https://pdfmake.github.io/docs/fonts/custom-fonts-client-side/
+            // and https://datatables.net/reference/button/pdfHtml5
+            {
+                extend: 'pdfHtml5',
+                customize: function ( doc ) {
+                    doc.defaultStyle.font = "Amiri";
+                }
+            },
             {
                 extend: 'csv',
                 filename: 'kitab-corpusmetadata',
@@ -76,7 +97,7 @@ $(document).ready(function () {
             {
                 text: 'All',
                 action: function (e, dt, node, config) {
-                    table.draw();
+                    table.search("").draw();
                 }
             },
         ],
@@ -296,7 +317,7 @@ $(document).ready(function () {
                     /*                    tags = data.replace(/;_|_|;/g, "; ");
                                         Atags = checknull(row['classification']);
                                         Atags = Atags.replace(/::|_|;/g, ":: ");
-                    
+
                                         return "<div class='tag text-wrap'>" + tags + "<br/>" + Atags + "</div>";
                                         */
                     tags = checknull(data);
@@ -319,6 +340,21 @@ $(document).ready(function () {
 
     });
 
+    $('#inProgressFilter').on('click',function() {
+      table.search("inProgress").draw();
+    });
 
+    $('#AnnotationCompletedFilter').on('click',function() {
+      table.search("completed").draw();
+    });
+
+    $('#AnnotationVettedFilter').on('click',function() {
+      table.search("mARkdown").draw();
+    });
+
+    $('#notYetAnnotatedFilter').on('click',function() {
+      console.log("filtering...");
+      table.search("(?<!mARkdown|completed|inProgress)$", true).draw();
+    });
 
 });
