@@ -144,7 +144,7 @@ input[type="search"]
   font-weight: 300!important;
   margin-right: 5px;
   border-radius: .25rem!important;
-  
+
 }
 
 .btn-secondary:hover{
@@ -175,4 +175,7 @@ tr.shown td.details-control {
 }
 .page-link{
   color:  #2863A5!important;
+}
+.info{
+  font-size: 14px;
 }

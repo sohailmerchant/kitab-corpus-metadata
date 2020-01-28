@@ -25,6 +25,7 @@ $(document).ready(function () {
 
     }
 
+
     table = $('#example').DataTable({
 
         //"sDom": '<"wrapper"lfptip>',
@@ -76,7 +77,7 @@ $(document).ready(function () {
             {
                 text: 'All',
                 action: function (e, dt, node, config) {
-                    table.draw();
+                  table.search("").draw();
                 }
             },
         ],
@@ -333,6 +334,21 @@ $(document).ready(function () {
 
     });
 
+    $('#inProgressFilter').on('click',function() {
+      table.search("inProgress").draw();
+    });
 
+    $('#AnnotationCompletedFilter').on('click',function() {
+      table.search("completed").draw();
+    });
+
+    $('#AnnotationVettedFilter').on('click',function() {
+      table.search("mARkdown").draw();
+    });
+
+    $('#notYetAnnotatedFilter').on('click',function() {
+      console.log("filtering...");
+      table.search("(?<!mARkdown|completed|inProgress)$", true).draw();
+    });
 
 });

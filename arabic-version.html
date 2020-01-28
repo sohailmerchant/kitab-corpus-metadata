@@ -6,9 +6,9 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <!-- <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script> -->
-   
-  
-    
+
+
+
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.0.0/dt-1.10.16/datatables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" />
     <!-- old version -->
@@ -43,42 +43,40 @@ body{
     <p>Last udpated in January 2020</p>
     <p>KITAB Internal Version</p>
 </div>
-<div class="info" style="float:left; width:50%; padding: 10px;"><div id='total'></div>
-<i class='fas fa-record-vinyl not-annotated' title='Not Yet Annotated'> </i> <span>Not Yet Annotation</span>
-<i class='fas fa-record-vinyl inProgress' title='Annotation In-Progress'> </i> <span>Annotation In-Progress</span>
-<i class='fas fa-record-vinyl completed' title='Annotation completed'> </i> <span>Annotation Completed</span>
-
-<i class='fas fa-record-vinyl mARkdown' title='Annotation Completed and Vetted'> </i> <span>Annotation Completed and Vetted</span>
-
+<div class="info" style="float:left; padding: 10px;"><div id='total'></div>
+  <span id="notYetAnnotatedFilter"><i class='fas fa-record-vinyl not-annotated' title='Not yet annotated'> </i> Not Yet Annotated</span>
+  <span id="inProgressFilter"><i class='fas fa-record-vinyl inProgress' title='Annotation in progress'> </i> Annotation In-Progress</span>
+  <span id="AnnotationCompletedFilter"><i class='fas fa-record-vinyl completed' title='Annotation completed'> </i> Annotation Completed</span>
+  <span id="AnnotationVettedFilter"><i class='fas fa-record-vinyl mARkdown' title='Annotation completed and vetted'> </i> Annotation Completed and Vetted</span>
 </div>
 <div id="container" style="float: left; width:100%">
-    
+
     <table id="example" class="arabic table table-striped table-hover table-sm" style="width:100%; direction: rtl;">
         <thead class="thead-light">
             <tr>
                 <!-- <th>Verion URI</th> -->
                 <th>Book Id</th>
-                
-                
+
+
                 <th>Book Title</th>
                 <th>Author</th>
-                
+
                 <th>Date</th>
                 <th>Length</th>
                 <!-- <th>Status</th> -->
                 <th>Edition / Editor</th>
-                
-        
+
+
                 <th>Genre</th>
                 <th>Status</th>
-                
-             
-              
-                <!--  <th>Full Text Book URL</th> 
+
+
+
+                <!--  <th>Full Text Book URL</th>
                     <th>Full Book URI</th> -->
-<!-- 
-                
-                
+<!--
+
+
                 <th>Download SRT/CSV Files</th> -->
             </tr>
         </thead>
@@ -96,7 +94,7 @@ body{
                 </tfoot> -->
     </table>
 
-  
+
 </div>
 
 </body>
