@@ -30,15 +30,24 @@ position: relative;
   background-color: red;
 
 }
-.arabic table td:last-child{
+table td:last-child, td:nth-last-child(2){
 
   font-size: 10px;
 }
 
-th:last-child{
+th:last-child, th:nth-last-child(2){
 
   width: 15%;
 
+
+}
+th:nth-child(1), th:nth-child(2),th:nth-child(3){
+
+  width: 20%;
+}
+
+#inProgressFilter, #notYetAnnotatedFilter,#AnnotationCompletedFilter, #AnnotationVettedFilter{
+  cursor: pointer;
 
 }
 .completed {
