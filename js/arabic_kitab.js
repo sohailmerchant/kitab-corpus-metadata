@@ -2,6 +2,18 @@ var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
 issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
 
+// Add Arabic font for pdfMake:
+pdfMake.fonts = {
+      Amiri: {
+              normal: 'Amiri-Regular.ttf',
+              bold: 'Amiri-Bold.ttf',
+              italics: 'Amiri-Slanted.ttf',
+              bolditalics: 'Amiri-BoldSlanted.ttf'
+      }
+}
+console.log("test");
+console.log(pdfMake.fonts);
+
 $(document).ready(function () {
 
     function pad(n, width, z) {
@@ -48,7 +60,16 @@ $(document).ready(function () {
         buttons: [
             'copyHtml5',
             'excelHtml5',
-            'pdfHtml5',
+            //'pdfHtml5',
+            // Add Arabic font for pdfMake:
+            // See https://pdfmake.github.io/docs/fonts/custom-fonts-client-side/
+            // and https://datatables.net/reference/button/pdfHtml5
+            {
+                extend: 'pdfHtml5',
+                customize: function ( doc ) {
+                    doc.defaultStyle.font = "Amiri";
+                }
+            },
             {
                 extend: 'csv',
                 filename: 'kitab-corpusmetadata',
