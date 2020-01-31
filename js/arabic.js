@@ -57,18 +57,18 @@ $(document).ready(function () {
         "colReorder": true,
         dom: 'Bfrtip',
         buttons: [
-            'copyHtml5',
-            'excelHtml5',
+            //'copyHtml5',
+            //'excelHtml5',
             //'pdfHtml5',
             // Add Arabic font for pdfMake:
             // See https://pdfmake.github.io/docs/fonts/custom-fonts-client-side/
             // and https://datatables.net/reference/button/pdfHtml5
-            {
-                extend: 'pdfHtml5',
-                customize: function ( doc ) {
-                    doc.defaultStyle.font = "Amiri";
-                }
-            },
+            //{
+            //    extend: 'pdfHtml5',
+            //    customize: function ( doc ) {
+            //        doc.defaultStyle.font = "Amiri";
+            //    }
+            //},
             {
                 extend: 'csv',
                 filename: 'kitab-corpusmetadata',
@@ -166,10 +166,11 @@ $(document).ready(function () {
                     var textQuality = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + versionuri + "'target=_blank title='Full Text Quality Issue - raise issue on GitHub'> <i class='fas fa-bug bug' aria-hidden='true'></i></a>";
                     var inProgress = " <a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=in+progress&template=in-progress.md&title=IN+PROGRESS: " + versionuri + "'target=_blank title='Report Text In Progress  - raise issue on GitHub'> <i class='fas fa-tasks bug' aria-hidden='true'></i></a>";
                     var completedText = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+tagged&template=submission-report--for-pull-requests-.md&title=" + versionuri + "'target=_blank title='Report Text Tagged - raise issue on GitHub'> <i class='fas fa-tag bug'aria-hidden='true' ></i></a>";
+                    var priSec = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=PRI+%26+SEC+Versions&template=pri-vs-sec.md&title=" + versionuri + "'target=_blank title='Request change of primary text - raise issue on GitHub'> <i class='fas fa-sync-alt bug' aria-hidden='true'></i></a>";
                     var changeUri = issueURItempl + versionuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
 
-                    return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + completedText + inProgress + endtag + "</div>";
+                    return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + priSec + endtag + "</div>";
                 }
             },
 
@@ -220,7 +221,7 @@ $(document).ready(function () {
                     var split_url = row['url'].split('/');
                     var versionuri = split_url[split_url.length - 1];
                     var bookuri = versionuri.split(".").slice(0, 2).join(".");
-                    var intro = '<div class="add-issue">Raise a issue for book title <br/>';
+                    var intro = '<div class="add-issue">Raise a book title issue<br/>';
                     var opentag = '<span class="issues">';
                     var changeUri = issueURItempl + bookuri + "' target=_blank title='Change URI - raise issue on GitHub'>";
                     changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
