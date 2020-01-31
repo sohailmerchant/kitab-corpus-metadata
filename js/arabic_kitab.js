@@ -230,7 +230,7 @@ $(document).ready(function () {
                     var split_url = row['url'].split('/');
                     var versionuri = split_url[split_url.length - 1];
                     var bookuri = versionuri.split(".").slice(0, 2).join(".");
-                    var intro = '<div class="add-issue">Raise a book title issue:<br/>';
+                    var intro = '<div class="add-issue">Raise a book title issue<br/>';
                     var opentag = '<span class="issues">';
                     var changeUri = issueURItempl + bookuri + "' target=_blank title='Change title URI - raise issue on GitHub'>";
                     changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
@@ -336,7 +336,7 @@ $(document).ready(function () {
                 }
 
             },
-            
+
 
             {
               "data": "srts",
@@ -360,7 +360,7 @@ $(document).ready(function () {
                 "visible": false
             },
 
-           
+
 
         ]
 
