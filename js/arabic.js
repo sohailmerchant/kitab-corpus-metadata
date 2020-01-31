@@ -57,18 +57,18 @@ $(document).ready(function () {
         "colReorder": true,
         dom: 'Bfrtip',
         buttons: [
-            'copyHtml5',
-            'excelHtml5',
+            //'copyHtml5',
+            //'excelHtml5',
             //'pdfHtml5',
             // Add Arabic font for pdfMake:
             // See https://pdfmake.github.io/docs/fonts/custom-fonts-client-side/
             // and https://datatables.net/reference/button/pdfHtml5
-            {
-                extend: 'pdfHtml5',
-                customize: function ( doc ) {
-                    doc.defaultStyle.font = "Amiri";
-                }
-            },
+            //{
+            //    extend: 'pdfHtml5',
+            //    customize: function ( doc ) {
+            //        doc.defaultStyle.font = "Amiri";
+            //    }
+            //},
             {
                 extend: 'csv',
                 filename: 'kitab-corpusmetadata',
