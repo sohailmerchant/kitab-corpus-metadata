@@ -58,17 +58,26 @@ $(document).ready(function () {
         "colReorder": true,
         dom: 'Bfrtip',
         buttons: [
-            'copyHtml5',
-            'excelHtml5',
+            //'copyHtml5',
+           // 'excelHtml5',
             //'pdfHtml5',
             // Add Arabic font for pdfMake:
             // See https://pdfmake.github.io/docs/fonts/custom-fonts-client-side/
             // and https://datatables.net/reference/button/pdfHtml5
+            // {
+            //     extend: 'pdfHtml5',
+            //     filename: 'kitab-corpusmetadata',
+            //     stripHtml: true,
+            //     exportOptions: { orthogonal: 'rawExport' },
+            //     customize: function ( doc ) {
+            //         doc.defaultStyle.font = "Amiri";
+            //     }
+            // },
             {
-                extend: 'pdfHtml5',
-                customize: function ( doc ) {
-                    doc.defaultStyle.font = "Amiri";
-                }
+                extend: 'excel',
+                filename: 'kitab-corpusmetadata',
+                stripHtml: true,
+                exportOptions: { orthogonal: 'rawExport' },
             },
             {
                 extend: 'csv',
@@ -194,7 +203,7 @@ $(document).ready(function () {
                     var i = data.indexOf('.')
                     data = data.substring(i + 1);
                     data = data.replace(/([A-Z])/g, ' $1').trim();
-                    cellContent += data + '</a><br/></strong>' + row['title'];
+                    cellContent += data + '</a><br/></strong>' + row['title'].split("::")[1];
 
 
                     //
@@ -327,6 +336,7 @@ $(document).ready(function () {
                 }
 
             },
+            
 
             {
               "data": "srts",
@@ -340,7 +350,6 @@ $(document).ready(function () {
                 return '<div class="LTR">' + cellContent + '</div>'
               }
             },
-
             {
                 "data": "status",
                 "visible": false
@@ -350,6 +359,8 @@ $(document).ready(function () {
                 "data": "url",
                 "visible": false
             },
+
+           
 
         ]
 

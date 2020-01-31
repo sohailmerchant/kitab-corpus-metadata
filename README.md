@@ -11,3 +11,6 @@ This apps provide details about the metadata of the KITAB corpus
 - Integration with GitHub showing an icon where an issue exists
 - Icon for indicating annotation status
 - Other minor formatting related changes
+- Filter based on the annotation status
+- Removed PDF and Copy button, considering the size of the file it was proving difficulties for browser
+
