@@ -11,7 +11,7 @@ pdfMake.fonts = {
               bolditalics: 'Amiri-BoldSlanted.ttf'
       }
 }
-console.log("test");
+//console.log("test");
 console.log(pdfMake.fonts);
 
 $(document).ready(function () {
