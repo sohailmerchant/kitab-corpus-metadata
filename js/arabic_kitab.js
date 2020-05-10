@@ -179,7 +179,7 @@ $(document).ready(function () {
                     var changeUri = issueURItempl + versionuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
                     var priSec = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=PRI+%26+SEC+Versions&template=pri-vs-sec.md&title=" + versionuri + "'target=_blank title='Request change of primary text - raise issue on GitHub'> <i class='fas fa-sync-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
-                    var isnadbar =  "<div class='bar' style='border:0px solid #E16C66'><div style=' width:100%; background-color: #F4F2E3!important; color:#E16C66'> Isnad Tag Count: "+ row['Isnad Tag Count'] +"<br/> Fraction: " + (parseFloat(row['Isnad Fraction'])*100).toFixed(3)+ "%</div></div>"
+                    var isnadbar =  "<div class='isnad-bar-outer'><div class='isnad-bar-inner'> Isnad Tag Count: "+ row['Isnad Tag Count'] +"<br/> Fraction: " + (parseFloat(row['Isnad Fraction'])*100).toFixed(3)+ "%</div></div>"
                     return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + completedText + inProgress + priSec + endtag + isnadbar + "</div>";
                 }
             },

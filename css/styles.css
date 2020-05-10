@@ -188,3 +188,17 @@ tr.shown td.details-control {
 .info{
   font-size: 14px;
 }
+
+.isnad-bar-outer{
+
+ 
+
+}
+.isnad-bar-inner{
+
+  width:100%; 
+  background-color: #F4F2E3!important; 
+  color:#E16C66;
+  padding-left: 5px;
+  padding-right: 5px;
+}
