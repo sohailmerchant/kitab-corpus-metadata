@@ -322,21 +322,21 @@ $(document).ready(function () {
                 }
             },
 
-            {
-                "data": "tags",
-                "render": function (data, type, row, meta) {
-                    /*                    tags = data.replace(/;_|_|;/g, "; ");
-                                        Atags = checknull(row['classification']);
-                                        Atags = Atags.replace(/::|_|;/g, ":: ");
+            // {
+            //     "data": "tags",
+            //     "render": function (data, type, row, meta) {
+            //         /*                    tags = data.replace(/;_|_|;/g, "; ");
+            //                             Atags = checknull(row['classification']);
+            //                             Atags = Atags.replace(/::|_|;/g, ":: ");
 
-                                        return "<div class='tag text-wrap'>" + tags + "<br/>" + Atags + "</div>";
-                                        */
-                    tags = checknull(data);
-                    tags = tags.replace(/;|_/g, "");
-                    return "<div class='tag text-wrap'>" + tags + "</div>";
-                }
+            //                             return "<div class='tag text-wrap'>" + tags + "<br/>" + Atags + "</div>";
+            //                             */
+            //         tags = checknull(data);
+            //         tags = tags.replace(/;|_/g, "");
+            //         return "<div class='tag text-wrap'>" + tags + "</div>";
+            //     }
 
-            },
+            // },
 
 
             {
