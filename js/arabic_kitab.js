@@ -112,7 +112,7 @@ $(document).ready(function () {
             },
         ],
         "deferRender": true,
-        "ajax": "db/OpenITI_metadata_light-isnad-arabic.json",
+        "ajax": "db/OpenITI_metadata_light-isnad-arabic-28052020.json",
 
         "columns": [
             {
@@ -138,7 +138,7 @@ $(document).ready(function () {
                     cellContent += '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a><br/></strong>'
 
                     // add Arabic title of the book
-                    cellContent += row['title'];
+                    cellContent += row['title_lat'];
 
                     // add info about the primary/secondary status of the version:
                     if (row['status'] === 'pri') {
@@ -204,8 +204,8 @@ $(document).ready(function () {
                     var i = data.indexOf('.')
                     data = data.substring(i + 1);
                     data = data.replace(/([A-Z])/g, ' $1').trim();
-                    cellContent += data + '</a><br/></strong>' + row['title'].split("::")[1];
-
+                    //cellContent += data + '</a><br/></strong>' + row['title'].split("::")[1];
+                    cellContent += data + '</a><br/></strong>' + row['title_ar'];    
 
                     //
                     if (row["book_issues"].length > 0) {
@@ -242,7 +242,7 @@ $(document).ready(function () {
             },
 
             {
-                "data": "author",
+                "data": "author_lat",
                 "render": function (data, type, row, meta) {
 
                     if (type === 'rawExport') {
@@ -259,9 +259,9 @@ $(document).ready(function () {
                     var authorDiv = "<div class='author text-wrap'>" + authorLink + "<br/>";
 
                     // add the Arabic version(s) of the author name:
-                    if (d.split("::").length > 1) {
-                        authorDiv += d.split("::")[1];
-                    }
+                    if (row["author_ar"].length > 0) {
+                        authorDiv + row["author_ar"];
+                      }
 
                     // add links to GitHub issues related to the author uri:
                     if (row["author_issues"].length > 0) {
@@ -322,21 +322,21 @@ $(document).ready(function () {
                 }
             },
 
-            // {
-            //     "data": "tags",
-            //     "render": function (data, type, row, meta) {
-            //         /*                    tags = data.replace(/;_|_|;/g, "; ");
-            //                             Atags = checknull(row['classification']);
-            //                             Atags = Atags.replace(/::|_|;/g, ":: ");
+            {
+                "data": "tags",
+                "render": function (data, type, row, meta) {
+                    /*                    tags = data.replace(/;_|_|;/g, "; ");
+                                        Atags = checknull(row['classification']);
+                                        Atags = Atags.replace(/::|_|;/g, ":: ");
 
-            //                             return "<div class='tag text-wrap'>" + tags + "<br/>" + Atags + "</div>";
-            //                             */
-            //         tags = checknull(data);
-            //         tags = tags.replace(/;|_/g, "");
-            //         return "<div class='tag text-wrap'>" + tags + "</div>";
-            //     }
+                                        return "<div class='tag text-wrap'>" + tags + "<br/>" + Atags + "</div>";
+                                        */
+                    tags = checknull(data);
+                    tags = tags.replace(/;|_/g, "");
+                    return "<div class='tag text-wrap'>" + tags + "</div>";
+                }
 
-            // },
+            },
 
 
             {
