@@ -1,15 +1,16 @@
 var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
+var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json"
 issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
 
 // Add Arabic font for pdfMake:
 pdfMake.fonts = {
-      Amiri: {
-              normal: 'Amiri-Regular.ttf',
-              bold: 'Amiri-Bold.ttf',
-              italics: 'Amiri-Slanted.ttf',
-              bolditalics: 'Amiri-BoldSlanted.ttf'
-      }
+    Amiri: {
+        normal: 'Amiri-Regular.ttf',
+        bold: 'Amiri-Bold.ttf',
+        italics: 'Amiri-Slanted.ttf',
+        bolditalics: 'Amiri-BoldSlanted.ttf'
+    }
 }
 //console.log("test");
 console.log(pdfMake.fonts);
@@ -59,7 +60,7 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             //'copyHtml5',
-           // 'excelHtml5',
+            // 'excelHtml5',
             //'pdfHtml5',
             // Add Arabic font for pdfMake:
             // See https://pdfmake.github.io/docs/fonts/custom-fonts-client-side/
@@ -107,13 +108,15 @@ $(document).ready(function () {
             {
                 text: 'All',
                 action: function (e, dt, node, config) {
-                  table.search("").draw();
+                    table.search("").draw();
                 }
             },
         ],
         "deferRender": true,
-        "ajax": "db/OpenITI_metadata_light-isnad-arabic-28052020.json",
-
+        //"ajax": "db/OpenITI_metadata_light-isnad-arabic-28052020.json",
+        "ajax": {
+            'url': url,
+        },
         "columns": [
             {
                 "data": 'id',
@@ -139,6 +142,33 @@ $(document).ready(function () {
 
                     // add Arabic title of the book
                     cellContent += row['title_lat'];
+
+                    // make Github yml URL
+                    //Author from versionUri - taking the first part which give author with date e.g. 0322CabdAllahMahdi
+                    s = row['url'].replace('https://raw.githubusercontent.com', 'https://github.com')
+                    
+                    s = s.replace('master/data/','blob/master/data/')
+                    s= s.replace('.completed','')
+                    s= s.replace('.inProgress','')
+                    s=s.replace('.completed','')
+                    s=s.replace('.mARkdown','')
+                    // if (s.includes('completed')|| s.includes('inProgress')||s.includes('mARkdown')){
+
+                    //     s.replace('mARkdown','')
+                    //     s.replace('inProgress','')
+                    //     s.replace('completed','')
+                    // }
+                    s = s.replace('-ara1', '-ara1.yml')
+                    console.log(s)
+                   
+                    f = "<a href ='" + s + "' target=_blank><img src='images/yml.png' height=16 title='" +  s +  "'/></a>"
+                    ymlFile = '<span class=ymlfile>' + f + '</span>'
+                    // https://github.com/OpenITI/0325AH/blob/master/data/0322CabdAllahMahdi/0322CabdAllahMahdi.KitabAsrar/0322CabdAllahMahdi.KitabAsrar.yml
+                    // https://raw.githubusercontent.com/OpenITI/0525AH/master/data/0502RaghibIsbahani/0502RaghibIsbahani.TafsilNashatayn/0502RaghibIsbahani.TafsilNashatayn.Shamela0021562-ara1
+                    // https://github.com/OpenITI/0325AH/blob/master/data/0322CabdAllahMahdi/0322CabdAllahMahdi.KitabAsrar.AQ001/0322CabdAllahMahdi.KitabAsrar.AQ001-ara1.yml
+                    // // 'https://github.com/OpenITI/'
+                    // 0325AH/blob/master/data/
+                    // 0322CabdAllahMahdi/0322CabdAllahMahdi.KitabAsrar/0322CabdAllahMahdi.KitabAsrar.AQ001-ara1.yml'
 
                     // add info about the primary/secondary status of the version:
                     if (row['status'] === 'pri') {
@@ -169,6 +199,8 @@ $(document).ready(function () {
 
                     // wrap the current contents in a div; vertically aligned with the top
                     cellContent = '<div>' + cellContent + "<br/><br/><br/></div>";
+                    
+
 
                     // add a new div, vertically aligned with the bottom, with links to raise issues:
                     var versionuri = row['url'].split('/')[9];
@@ -179,8 +211,8 @@ $(document).ready(function () {
                     var changeUri = issueURItempl + versionuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
                     var priSec = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=PRI+%26+SEC+Versions&template=pri-vs-sec.md&title=" + versionuri + "'target=_blank title='Request change of primary text - raise issue on GitHub'> <i class='fas fa-sync-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
-                    var isnadbar =  "<div class='isnad-bar-outer'><div class='isnad-bar-inner'> Isnad Tag Count: "+ row['Isnad Tag Count'] +"<br/> Fraction: " + (parseFloat(row['Isnad Fraction'])*100).toFixed(3)+ "%</div></div>"
-                    return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + completedText + inProgress + priSec + endtag + isnadbar + "</div>";
+                    var isnadbar = "<div class='isnad-bar-outer'><div class='isnad-bar-inner'> Isnad Tag Count: " + row['Isnad Tag Count'] + "<br/> Fraction: " + (parseFloat(row['Isnad Fraction']) * 100).toFixed(3) + "%</div></div>"
+                    return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + completedText + inProgress + priSec + ymlFile + endtag + "</div>";
                 }
             },
 
@@ -205,7 +237,7 @@ $(document).ready(function () {
                     data = data.substring(i + 1);
                     data = data.replace(/([A-Z])/g, ' $1').trim();
                     //cellContent += data + '</a><br/></strong>' + row['title'].split("::")[1];
-                    cellContent += data + '</a><br/></strong>' + row['title_ar'];    
+                    cellContent += data + '</a><br/></strong>' + row['title_ar'];
 
                     //
                     if (row["book_issues"].length > 0) {
@@ -261,7 +293,7 @@ $(document).ready(function () {
                     // add the Arabic version(s) of the author name:
                     if (row["author_ar"].length > 0) {
                         authorDiv + row["author_ar"];
-                      }
+                    }
 
                     // add links to GitHub issues related to the author uri:
                     if (row["author_issues"].length > 0) {
@@ -281,6 +313,20 @@ $(document).ready(function () {
                     // to be aligned vertically with the top of the cell:
                     authorDiv += '<br/><br/><br/></div>';
 
+                    //Author from versionUri - taking the first part which give author with date e.g. 0322CabdAllahMahdi
+                    s = row['versionUri'].split('.')[0]
+
+                    //Get the date 4 characters
+                    d = row['versionUri'].substring(0, 4);
+                    
+                    // pad it to get 25 year repos
+                    d = pad(Math.ceil(d / 25) * 25, 4)
+                    df = 'https://github.com/OpenITI/' + d+ 'AH' + '/blob/master/data/' + s + '/' + s + '.yml'
+                    //a = 'https://raw.githubusercontent.com/OpenITI/' + d + 'AH' + '/master/data/' + s + '/' + s + '.yml'
+                    s = s.replace(/([A-Z])/g, ' $1').trim();
+                    f = "<a href ='" + df + "' target=_blank><img src='images/yml.png' height=16 title='" +  df +  "'/></a>"
+                    ymlFile = '<span class=ymlfile>' + f + '</span>'
+
                     // Add link to raise issues about the author URI:
                     var split_url = row['url'].split('/');
                     var versionuri = split_url[split_url.length - 1];
@@ -291,7 +337,7 @@ $(document).ready(function () {
                     changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
 
-                    return authorDiv + intro + opentag + changeUri + endtag;
+                    return authorDiv + intro + opentag + changeUri + ymlFile + endtag;
                 }
             },
 
@@ -340,16 +386,16 @@ $(document).ready(function () {
 
 
             {
-              "data": "srts",
-              "render": function (data, type, row, meta) {
-                var cellContent = "";
-                for (var i=0; i<data.length; i++) {
-                  cellContent += '<a href="'+ data[i][1] +'" target="_blank">';
-                  cellContent += data[i][0] + '</a><br/>'
-                }
+                "data": "srts",
+                "render": function (data, type, row, meta) {
+                    var cellContent = "";
+                    for (var i = 0; i < data.length; i++) {
+                        cellContent += '<a href="' + data[i][1] + '" target="_blank">';
+                        cellContent += data[i][0] + '</a><br/>'
+                    }
 
-                return '<div class="LTR">' + cellContent + '</div>'
-              }
+                    return '<div class="LTR">' + cellContent + '</div>'
+                }
             },
             {
                 "data": "status",
@@ -367,21 +413,21 @@ $(document).ready(function () {
 
     });
 
-    $('#inProgressFilter').on('click',function() {
-      table.search("inProgress").draw();
+    $('#inProgressFilter').on('click', function () {
+        table.search("inProgress").draw();
     });
 
-    $('#AnnotationCompletedFilter').on('click',function() {
-      table.search("completed").draw();
+    $('#AnnotationCompletedFilter').on('click', function () {
+        table.search("completed").draw();
     });
 
-    $('#AnnotationVettedFilter').on('click',function() {
-      table.search("mARkdown").draw();
+    $('#AnnotationVettedFilter').on('click', function () {
+        table.search("mARkdown").draw();
     });
 
-    $('#notYetAnnotatedFilter').on('click',function() {
-      console.log("filtering...");
-      table.search("(?<!mARkdown|completed|inProgress)$", true).draw();
+    $('#notYetAnnotatedFilter').on('click', function () {
+        console.log("filtering...");
+        table.search("(?<!mARkdown|completed|inProgress)$", true).draw();
     });
 
 });

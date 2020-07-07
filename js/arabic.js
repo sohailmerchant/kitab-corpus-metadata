@@ -1,20 +1,21 @@
 var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
+var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json"
 issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
-
 
 // Add Arabic font for pdfMake:
 pdfMake.fonts = {
-      Amiri: {
-              normal: 'Amiri-Regular.ttf',
-              bold: 'Amiri-Bold.ttf',
-              italics: 'Amiri-Slanted.ttf',
-              bolditalics: 'Amiri-BoldSlanted.ttf'
-      }
+    Amiri: {
+        normal: 'Amiri-Regular.ttf',
+        bold: 'Amiri-Bold.ttf',
+        italics: 'Amiri-Slanted.ttf',
+        bolditalics: 'Amiri-BoldSlanted.ttf'
+    }
 }
+//console.log("test");
+console.log(pdfMake.fonts);
 
 $(document).ready(function () {
-
 
     function pad(n, width, z) {
         z = z || '0';
@@ -37,6 +38,7 @@ $(document).ready(function () {
 
     }
 
+
     table = $('#example').DataTable({
 
         //"sDom": '<"wrapper"lfptip>',
@@ -58,17 +60,26 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: [
             //'copyHtml5',
-            //'excelHtml5',
+            // 'excelHtml5',
             //'pdfHtml5',
             // Add Arabic font for pdfMake:
             // See https://pdfmake.github.io/docs/fonts/custom-fonts-client-side/
             // and https://datatables.net/reference/button/pdfHtml5
-            //{
-            //    extend: 'pdfHtml5',
-            //    customize: function ( doc ) {
-            //        doc.defaultStyle.font = "Amiri";
-            //    }
-            //},
+            // {
+            //     extend: 'pdfHtml5',
+            //     filename: 'kitab-corpusmetadata',
+            //     stripHtml: true,
+            //     exportOptions: { orthogonal: 'rawExport' },
+            //     customize: function ( doc ) {
+            //         doc.defaultStyle.font = "Amiri";
+            //     }
+            // },
+            {
+                extend: 'excel',
+                filename: 'kitab-corpusmetadata',
+                stripHtml: true,
+                exportOptions: { orthogonal: 'rawExport' },
+            },
             {
                 extend: 'csv',
                 filename: 'kitab-corpusmetadata',
@@ -83,8 +94,8 @@ $(document).ready(function () {
 
                     $.fn.dataTable.ext.search.push(
                         function (settings, data, dataIndex) {
-                            console.log(data[7])
-                            return data[7].trim() == 'pri'
+                            console.log(data[8])
+                            return data[8].trim() == 'pri'
 
                         }
                     )
@@ -102,8 +113,10 @@ $(document).ready(function () {
             },
         ],
         "deferRender": true,
-        "ajax": "db/OpenITI_metadata_light-arabic.json",
-
+        //"ajax": "db/OpenITI_metadata_light-isnad-arabic-28052020.json",
+        "ajax": {
+            'url': url,
+        },
         "columns": [
             {
                 "data": 'id',
@@ -128,7 +141,7 @@ $(document).ready(function () {
                     cellContent += '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a><br/></strong>'
 
                     // add Arabic title of the book
-                    cellContent += row['title'];
+                    cellContent += row['title_lat'];
 
                     // add info about the primary/secondary status of the version:
                     if (row['status'] === 'pri') {
@@ -147,7 +160,7 @@ $(document).ready(function () {
                                 var changeUri = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0] + "' target=_blank title='Change URI issue " + item[0] + " on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>"
                                 tag += changeUri;
                             } else if (item[1] === "PRI & SEC Versions") {
-                                var priSec = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0] + "' target=_blank title='Switch primary/secondary issue " + item[0] + " on GitHub'> <i class='fas fa-retweet-alt bug' aria-hidden='true'></i></a>";
+                                var priSec = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0] + "' target=_blank title='Switch primary/secondary issue " + item[0] + " on GitHub'> <i class='fas fa-sync-alt bug' aria-hidden='true'></i></a>";
                                 tag += priSec;
                             } else if (item[1] === "text quality") {
                                 var textQual = "<a href ='https://github.com/OpenITI/Annotation/issues/" + item[0] + "' target=_blank title='Text quality issue " + item[0] + " on GitHub'> <i class='fas fa-bug' aria-hidden='true'></i></a>";
@@ -166,11 +179,11 @@ $(document).ready(function () {
                     var textQuality = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + versionuri + "'target=_blank title='Full Text Quality Issue - raise issue on GitHub'> <i class='fas fa-bug bug' aria-hidden='true'></i></a>";
                     var inProgress = " <a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=in+progress&template=in-progress.md&title=IN+PROGRESS: " + versionuri + "'target=_blank title='Report Text In Progress  - raise issue on GitHub'> <i class='fas fa-tasks bug' aria-hidden='true'></i></a>";
                     var completedText = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+tagged&template=submission-report--for-pull-requests-.md&title=" + versionuri + "'target=_blank title='Report Text Tagged - raise issue on GitHub'> <i class='fas fa-tag bug'aria-hidden='true' ></i></a>";
-                    var priSec = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=PRI+%26+SEC+Versions&template=pri-vs-sec.md&title=" + versionuri + "'target=_blank title='Request change of primary text - raise issue on GitHub'> <i class='fas fa-sync-alt bug' aria-hidden='true'></i></a>";
                     var changeUri = issueURItempl + versionuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
+                    var priSec = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=PRI+%26+SEC+Versions&template=pri-vs-sec.md&title=" + versionuri + "'target=_blank title='Request change of primary text - raise issue on GitHub'> <i class='fas fa-sync-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
-
-                    return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + priSec + endtag + "</div>";
+                    //var isnadbar = "<div class='isnad-bar-outer'><div class='isnad-bar-inner'> Isnad Tag Count: " + row['Isnad Tag Count'] + "<br/> Fraction: " + (parseFloat(row['Isnad Fraction']) * 100).toFixed(3) + "%</div></div>"
+                    return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + completedText + inProgress + priSec + endtag + "</div>";
                 }
             },
 
@@ -194,8 +207,8 @@ $(document).ready(function () {
                     var i = data.indexOf('.')
                     data = data.substring(i + 1);
                     data = data.replace(/([A-Z])/g, ' $1').trim();
-                    cellContent += data + '</a><br/></strong>' + row['title'];
-
+                    //cellContent += data + '</a><br/></strong>' + row['title'].split("::")[1];
+                    cellContent += data + '</a><br/></strong>' + row['title_ar'];
 
                     //
                     if (row["book_issues"].length > 0) {
@@ -223,7 +236,7 @@ $(document).ready(function () {
                     var bookuri = versionuri.split(".").slice(0, 2).join(".");
                     var intro = '<div class="add-issue">Raise a book title issue<br/>';
                     var opentag = '<span class="issues">';
-                    var changeUri = issueURItempl + bookuri + "' target=_blank title='Change URI - raise issue on GitHub'>";
+                    var changeUri = issueURItempl + bookuri + "' target=_blank title='Change title URI - raise issue on GitHub'>";
                     changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
 
@@ -232,7 +245,7 @@ $(document).ready(function () {
             },
 
             {
-                "data": "author",
+                "data": "author_lat",
                 "render": function (data, type, row, meta) {
 
                     if (type === 'rawExport') {
@@ -249,8 +262,8 @@ $(document).ready(function () {
                     var authorDiv = "<div class='author text-wrap'>" + authorLink + "<br/>";
 
                     // add the Arabic version(s) of the author name:
-                    if (d.split("::").length > 1) {
-                        authorDiv += d.split("::")[1];
+                    if (row["author_ar"].length > 0) {
+                        authorDiv + row["author_ar"];
                     }
 
                     // add links to GitHub issues related to the author uri:
@@ -294,7 +307,7 @@ $(document).ready(function () {
             },
 
             {
-                "data": "length",
+                "data": "tok_length",
                 render: function (data) {
                     return "<div class='text-wrap'>" + checknull(data) + "</div>";
                 }
@@ -327,6 +340,9 @@ $(document).ready(function () {
                 }
 
             },
+
+
+            
             {
                 "data": "status",
                 "visible": false
@@ -337,25 +353,27 @@ $(document).ready(function () {
                 "visible": false
             },
 
+
+
         ]
 
     });
 
-    $('#inProgressFilter').on('click',function() {
-      table.search("inProgress").draw();
+    $('#inProgressFilter').on('click', function () {
+        table.search("inProgress").draw();
     });
 
-    $('#AnnotationCompletedFilter').on('click',function() {
-      table.search("completed").draw();
+    $('#AnnotationCompletedFilter').on('click', function () {
+        table.search("completed").draw();
     });
 
-    $('#AnnotationVettedFilter').on('click',function() {
-      table.search("mARkdown").draw();
+    $('#AnnotationVettedFilter').on('click', function () {
+        table.search("mARkdown").draw();
     });
 
-    $('#notYetAnnotatedFilter').on('click',function() {
-      console.log("filtering...");
-      table.search("(?<!mARkdown|completed|inProgress)$", true).draw();
+    $('#notYetAnnotatedFilter').on('click', function () {
+        console.log("filtering...");
+        table.search("(?<!mARkdown|completed|inProgress)$", true).draw();
     });
 
 });
