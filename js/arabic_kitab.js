@@ -152,24 +152,13 @@ $(document).ready(function () {
                     s= s.replace('.inProgress','')
                     s=s.replace('.completed','')
                     s=s.replace('.mARkdown','')
-                    // if (s.includes('completed')|| s.includes('inProgress')||s.includes('mARkdown')){
-
-                    //     s.replace('mARkdown','')
-                    //     s.replace('inProgress','')
-                    //     s.replace('completed','')
-                    // }
+                    
                     s = s.replace('-ara1', '-ara1.yml')
                     console.log(s)
                    
                     f = "<a href ='" + s + "' target=_blank><img src='images/yml.png' height=16 title='" +  s +  "'/></a>"
                     ymlFile = '<span class=ymlfile>' + f + '</span>'
-                    // https://github.com/OpenITI/0325AH/blob/master/data/0322CabdAllahMahdi/0322CabdAllahMahdi.KitabAsrar/0322CabdAllahMahdi.KitabAsrar.yml
-                    // https://raw.githubusercontent.com/OpenITI/0525AH/master/data/0502RaghibIsbahani/0502RaghibIsbahani.TafsilNashatayn/0502RaghibIsbahani.TafsilNashatayn.Shamela0021562-ara1
-                    // https://github.com/OpenITI/0325AH/blob/master/data/0322CabdAllahMahdi/0322CabdAllahMahdi.KitabAsrar.AQ001/0322CabdAllahMahdi.KitabAsrar.AQ001-ara1.yml
-                    // // 'https://github.com/OpenITI/'
-                    // 0325AH/blob/master/data/
-                    // 0322CabdAllahMahdi/0322CabdAllahMahdi.KitabAsrar/0322CabdAllahMahdi.KitabAsrar.AQ001-ara1.yml'
-
+                    
                     // add info about the primary/secondary status of the version:
                     if (row['status'] === 'pri') {
                         cellContent += '<p title="This is the primary version of this text">PRI</p>'
