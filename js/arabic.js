@@ -40,7 +40,7 @@ $(document).ready(function () {
 
 
     table = $('#example').DataTable({
-
+        "order": [[ 3, "asc" ]],
         //"sDom": '<"wrapper"lfptip>',
         "sDom": "<'row rowpadding'B><'row'><'row'<'col-md-6'ilp><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'<'#colvis'>p>",
         "autoWidth": false,
@@ -59,21 +59,7 @@ $(document).ready(function () {
         "colReorder": true,
         dom: 'Bfrtip',
         buttons: [
-            //'copyHtml5',
-            // 'excelHtml5',
-            //'pdfHtml5',
-            // Add Arabic font for pdfMake:
-            // See https://pdfmake.github.io/docs/fonts/custom-fonts-client-side/
-            // and https://datatables.net/reference/button/pdfHtml5
-            // {
-            //     extend: 'pdfHtml5',
-            //     filename: 'kitab-corpusmetadata',
-            //     stripHtml: true,
-            //     exportOptions: { orthogonal: 'rawExport' },
-            //     customize: function ( doc ) {
-            //         doc.defaultStyle.font = "Amiri";
-            //     }
-            // },
+      
             {
                 extend: 'excel',
                 filename: 'kitab-corpusmetadata',
@@ -141,7 +127,7 @@ $(document).ready(function () {
                     cellContent += '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a><br/></strong>'
 
                     // add Arabic title of the book
-                    cellContent += row['title_lat'];
+                    //cellContent += row['title_lat'];
 
                     // add info about the primary/secondary status of the version:
                     if (row['status'] === 'pri') {
@@ -149,6 +135,22 @@ $(document).ready(function () {
                     } else {
                         cellContent += '<p title="This is the secondary version of this text">SEC</p>'
                     }
+
+                    // make Github yml URL
+                    //Author from versionUri - taking the first part which give author with date e.g. 0322CabdAllahMahdi
+                    s = row['url'].replace('https://raw.githubusercontent.com', 'https://github.com')
+                    
+                    s = s.replace('master/data/','blob/master/data/')
+                    s= s.replace('.completed','')
+                    s= s.replace('.inProgress','')
+                    s=s.replace('.completed','')
+                    s=s.replace('.mARkdown','')
+                    
+                    s = s.replace('-ara1', '-ara1.yml')
+                    console.log(s)
+                   
+                    f = "<a href ='" + s + "' target=_blank><img src='images/yml.png' height=16 title='" +  s +  "'/></a>"
+                    ymlFile = '<span class=ymlfile>' + f + '</span>'
 
                     // add links to issues related to this text version:
                     if (row["version_issues"].length > 0) {
@@ -183,7 +185,7 @@ $(document).ready(function () {
                     var priSec = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=PRI+%26+SEC+Versions&template=pri-vs-sec.md&title=" + versionuri + "'target=_blank title='Request change of primary text - raise issue on GitHub'> <i class='fas fa-sync-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
                     //var isnadbar = "<div class='isnad-bar-outer'><div class='isnad-bar-inner'> Isnad Tag Count: " + row['Isnad Tag Count'] + "<br/> Fraction: " + (parseFloat(row['Isnad Fraction']) * 100).toFixed(3) + "%</div></div>"
-                    return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + completedText + inProgress + priSec + endtag + "</div>";
+                    return cellContent + '<div class="add-issue">Raise a version issue <br/>' + opentag + changeUri + textQuality + completedText + inProgress + priSec + ymlFile + endtag + "</div>";
                 }
             },
 
@@ -263,7 +265,7 @@ $(document).ready(function () {
 
                     // add the Arabic version(s) of the author name:
                     if (row["author_ar"].length > 0) {
-                        authorDiv + row["author_ar"];
+                        authorDiv += row["author_ar"];
                     }
 
                     // add links to GitHub issues related to the author uri:
@@ -284,6 +286,20 @@ $(document).ready(function () {
                     // to be aligned vertically with the top of the cell:
                     authorDiv += '<br/><br/><br/></div>';
 
+                     //Author from versionUri - taking the first part which give author with date e.g. 0322CabdAllahMahdi
+                     s = row['versionUri'].split('.')[0]
+
+                     //Get the date 4 characters
+                     d = row['versionUri'].substring(0, 4);
+                     
+                     // pad it to get 25 year repos
+                     d = pad(Math.ceil(d / 25) * 25, 4)
+                     df = 'https://github.com/OpenITI/' + d+ 'AH' + '/blob/master/data/' + s + '/' + s + '.yml'
+                     //a = 'https://raw.githubusercontent.com/OpenITI/' + d + 'AH' + '/master/data/' + s + '/' + s + '.yml'
+                     s = s.replace(/([A-Z])/g, ' $1').trim();
+                     f = "<a href ='" + df + "' target=_blank><img src='images/yml.png' height=16 title='" +  df +  "'/></a>"
+                     ymlFile = '<span class=ymlfile>' + f + '</span>'
+
                     // Add link to raise issues about the author URI:
                     var split_url = row['url'].split('/');
                     var versionuri = split_url[split_url.length - 1];
@@ -294,7 +310,7 @@ $(document).ready(function () {
                     changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
 
-                    return authorDiv + intro + opentag + changeUri + endtag;
+                    return authorDiv + intro + opentag + changeUri + ymlFile + endtag;
                 }
             },
 
