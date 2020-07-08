@@ -1,6 +1,6 @@
 var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
-var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json"
+var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json?v1"
 issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
 
 // Add Arabic font for pdfMake:
@@ -141,7 +141,7 @@ $(document).ready(function () {
                     s=s.replace('.mARkdown','')
                     
                     s = s.replace('-ara1', '-ara1.yml')
-                    console.log(s)
+                    
                    
                     f = "<a href ='" + s + "' target=_blank><img src='images/yml.png' height=16 title='" +  s +  "'/></a>"
                     ymlFile = '<span class=ymlfile>' + f + '</span>'
@@ -207,6 +207,11 @@ $(document).ready(function () {
                     bookFolderUrl = 'https://github.com/OpenITI/' + d + 'AH' + '/tree/master/data/' + data.split(".")[0] + "/" + data
                     //console.log(bookFolderUrl)
                     cellContent += '<a href="' + bookFolderUrl + '" target="_blank" title="' + bookFolderUrl + '">'
+                    var link = bookFolderUrl+'/'+data+'.yml';
+
+                    f = "<a href ='" + link + "' target=_blank><img src='images/yml.png' height=16 title='" +  link +  "'/></a>"
+                    var ymlFile = '<span class=ymlfile>' + f + '</span>'
+
 
                     // make Latin version of book title and add to cellContent:
                     var i = data.indexOf('.')
@@ -245,7 +250,7 @@ $(document).ready(function () {
                     changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
 
-                    return cellContent + intro + opentag + changeUri + endtag;
+                    return cellContent + intro + opentag + changeUri + ymlFile + endtag;
                 }
             },
 
@@ -301,7 +306,7 @@ $(document).ready(function () {
                     //a = 'https://raw.githubusercontent.com/OpenITI/' + d + 'AH' + '/master/data/' + s + '/' + s + '.yml'
                     s = s.replace(/([A-Z])/g, ' $1').trim();
                     f = "<a href ='" + df + "' target=_blank><img src='images/yml.png' height=16 title='" +  df +  "'/></a>"
-                    ymlFile = '<span class=ymlfile>' + f + '</span>'
+                    var ymlFile = '<span class=ymlfile>' + f + '</span>'
 
                     // Add link to raise issues about the author URI:
                     var split_url = row['url'].split('/');

@@ -1,6 +1,6 @@
 var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
-var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json"
+var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json?v1"
 issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
 
 // Add Arabic font for pdfMake:
@@ -204,6 +204,11 @@ $(document).ready(function () {
                     bookFolderUrl = 'https://github.com/OpenITI/' + d + 'AH' + '/tree/master/data/' + data.split(".")[0] + "/" + data
                     //console.log(bookFolderUrl)
                     cellContent += '<a href="' + bookFolderUrl + '" target="_blank" title="' + bookFolderUrl + '">'
+                    
+                    var link = bookFolderUrl+'/'+data+'.yml';
+
+                    f = "<a href ='" + link + "' target=_blank><img src='images/yml.png' height=16 title='" +  link +  "'/></a>"
+                    var ymlFile = '<span class=ymlfile>' + f + '</span>'
 
                     // make Latin version of book title and add to cellContent:
                     var i = data.indexOf('.')
@@ -230,7 +235,7 @@ $(document).ready(function () {
 
                     // close first part of the cell content,
                     // to be vertically aligned with the top of the cell
-                    cellContent += '<br/><br/><br/></div>'
+                    cellContent += '<br/><br/></div>'
 
                     // make link to raise issue with the book title URI:
                     var split_url = row['url'].split('/');
@@ -242,7 +247,7 @@ $(document).ready(function () {
                     changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
                     var endtag = '</span>';
 
-                    return cellContent + intro + opentag + changeUri + endtag;
+                    return cellContent + intro + opentag + changeUri + ymlFile+ endtag;
                 }
             },
 
