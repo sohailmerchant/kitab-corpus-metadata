@@ -41,6 +41,7 @@ $(document).ready(function () {
 
     table = $('#example').DataTable({
 
+        "order": [[ 3, "asc" ]],
         //"sDom": '<"wrapper"lfptip>',
         "sDom": "<'row rowpadding'B><'row'><'row'<'col-md-6'ilp><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'<'#colvis'>p>",
         "autoWidth": false,
@@ -59,21 +60,7 @@ $(document).ready(function () {
         "colReorder": true,
         dom: 'Bfrtip',
         buttons: [
-            //'copyHtml5',
-            // 'excelHtml5',
-            //'pdfHtml5',
-            // Add Arabic font for pdfMake:
-            // See https://pdfmake.github.io/docs/fonts/custom-fonts-client-side/
-            // and https://datatables.net/reference/button/pdfHtml5
-            // {
-            //     extend: 'pdfHtml5',
-            //     filename: 'kitab-corpusmetadata',
-            //     stripHtml: true,
-            //     exportOptions: { orthogonal: 'rawExport' },
-            //     customize: function ( doc ) {
-            //         doc.defaultStyle.font = "Amiri";
-            //     }
-            // },
+     
             {
                 extend: 'excel',
                 filename: 'kitab-corpusmetadata',
@@ -281,7 +268,7 @@ $(document).ready(function () {
 
                     // add the Arabic version(s) of the author name:
                     if (row["author_ar"].length > 0) {
-                        authorDiv + row["author_ar"];
+                        authorDiv += row["author_ar"];
                     }
 
                     // add links to GitHub issues related to the author uri:

@@ -1,27 +1,9 @@
 
-
-//var url = "https://raw.githubusercontent.com/sohailmerchant/js-dev-env/master/kitab-openITI.json"
 var url = "https://raw.githubusercontent.com/OpenITI/Annotation/master/OpenITI_metadata_light.json"
-//var urlcsv = "https://raw.githubusercontent.com/OpenITI/Annotation/master/OpenITI_metadata_light.csv"
+
 //var totalRecords;
 var table;
 
-// function csvJSON(csv) {
-//     var lines = csv.split("\n");
-//     var result = [];
-//     var headers = lines[0].split(",");
-
-//     for (var i = 1; i < lines.length; i++) {
-//         var obj = {};
-//         var currentline = lines[i].split(",");
-
-//         for (var j = 0; j < headers.length; j++) {
-//             obj[headers[j]] = currentline[j];
-//         }
-//         result.push(obj);
-//     }
-//     //JSON object
-//     return JSON.stringify(result);
 // }
 
 $(document).ready(function () {
@@ -38,7 +20,7 @@ $(document).ready(function () {
     var srtContainer;
 
     var table = $('#example').DataTable({
-
+        "order": [[5, "asc" ]],
         "autoWidth": false,
         "pageLength": 50,
         "colReorder": true,
@@ -87,27 +69,13 @@ $(document).ready(function () {
         //"ajax": "db/jsoncsv.json",
         "deferRender": true,
         "ajax": {
-            //async: false,
-            //     'type': "GET",
-            //     'dataType': 'text',
+        
             'url': url,
-
-
-
-
-
 
         },
         "initComplete": function (settings, json) {
             getdata(json);
         },
-
-        // "initComplete":function( settings, data){
-        //     console.log(data);
-        //     return_first = data.data;
-        //     return getdata(data.data);
-        // },
-
 
         "columns": [
 
