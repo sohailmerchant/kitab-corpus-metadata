@@ -205,5 +205,7 @@ tr.shown td.details-control {
 
 .ymlfile{
 
-  padding-right: 10px;;
+  padding-right: 10px;
+  float: left;
+  padding-top: 5px;
 }
