@@ -126,7 +126,7 @@ $(document).ready(function () {
                     s=s.replace('.mARkdown','')
                     
                     s = s.replace('-ara1', '-ara1.yml')
-                    console.log(s)
+                    //console.log(s)
                    
                     f = "<a href ='" + s + "' target=_blank><img src='images/yml.png' height=16 title='" +  s +  "'/></a>"
                     ymlFile = "<span class='ymlfile'>" + f + "</span>"
@@ -152,12 +152,12 @@ $(document).ready(function () {
                     
                     // add Arabic title of the book
                     //cellContent += row['title_lat'];
-
+                   
                     // add info about the primary/secondary status of the version:
                     if (row['status'] === 'pri') {
                         bookStatusTag = '<p title="This is the primary version of this text">PRI</p>'
                     } else {
-                        bookStatusTag += '<p title="This is the secondary version of this text">SEC</p>'
+                        bookStatusTag = '<p title="This is the secondary version of this text">SEC</p>'
                     }
 
                     topDivOpen += cellContent + bookURISpan  + bookStatusTag 
