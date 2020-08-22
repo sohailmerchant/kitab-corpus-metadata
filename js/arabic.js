@@ -156,7 +156,7 @@ $(document).ready(function () {
                     if (row['status'] === 'pri') {
                         bookStatusTag = '<p title="This is the primary version of this text">PRI</p>'
                     } else {
-                        bookStatusTag += '<p title="This is the secondary version of this text">SEC</p>'
+                        bookStatusTag = '<p title="This is the secondary version of this text">SEC</p>'
                     }
 
                     topDivOpen += cellContent + bookURISpan  + bookStatusTag 
