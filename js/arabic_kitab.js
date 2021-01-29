@@ -2,7 +2,7 @@ var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
 var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json?v1"
 issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
-
+//url ="db/OpenITI_metadata_light-isnad-arabic-28052020.json"
 // Add Arabic font for pdfMake:
 pdfMake.fonts = {
     Amiri: {
@@ -13,7 +13,7 @@ pdfMake.fonts = {
     }
 }
 //console.log("test");
-console.log(pdfMake.fonts);
+//console.log(pdfMake.fonts);
 
 $(document).ready(function () {
 
@@ -403,6 +403,16 @@ $(document).ready(function () {
 
         ]
 
+    });
+
+    table.on('xhr', function () {
+        var json = table.ajax.json();
+        //alert( json.data.length +' row(s) were loaded' );
+        if (json['date']) {
+            dt = json['date'] + " - " + json['time']
+            document.getElementById("timestamp").innerHTML = "Last updated on :" + dt;
+            console.log(dt)
+        }
     });
 
     $('#inProgressFilter').on('click', function () {

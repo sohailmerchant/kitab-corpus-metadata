@@ -2,6 +2,7 @@ var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
 var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json?v1"
 issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
+//url ="db/OpenITI_metadata_light-isnad-arabic-28052020.json"
 
 // Add Arabic font for pdfMake:
 pdfMake.fonts = {
@@ -13,7 +14,7 @@ pdfMake.fonts = {
     }
 }
 //console.log("test");
-console.log(pdfMake.fonts);
+//console.log(pdfMake.fonts);
 
 $(document).ready(function () {
 
@@ -40,7 +41,7 @@ $(document).ready(function () {
 
 
     table = $('#example').DataTable({
-        "order": [[ 3, "asc" ]],
+        "order": [[3, "asc"]],
         //"sDom": '<"wrapper"lfptip>',
         "sDom": "<'row rowpadding'B><'row'><'row'<'col-md-6'ilp><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'<'#colvis'>p>",
         "autoWidth": false,
@@ -59,7 +60,7 @@ $(document).ready(function () {
         "colReorder": true,
         dom: 'Bfrtip',
         buttons: [
-      
+
             {
                 extend: 'excel',
                 filename: 'kitab-corpusmetadata',
@@ -102,6 +103,7 @@ $(document).ready(function () {
         //"ajax": "db/OpenITI_metadata_light-isnad-arabic-28052020.json",
         "ajax": {
             'url': url,
+            "dataSrc": "data"
         },
         "columns": [
             {
@@ -114,20 +116,20 @@ $(document).ready(function () {
                     topDivOpen = "<div class='bookID' style='float:right'>"
                     TopDivClosed = "</div>"
 
-                     // make Github yml URL
+                    // make Github yml URL
                     //Author from versionUri - taking the first part which give author with date e.g. 0322CabdAllahMahdi
                     s = row['url'].replace('https://raw.githubusercontent.com', 'https://github.com')
-                    
-                    s = s.replace('master/data/','blob/master/data/')
-                    s= s.replace('.completed','')
-                    s= s.replace('.inProgress','')
-                    s=s.replace('.completed','')
-                    s=s.replace('.mARkdown','')
-                    
+
+                    s = s.replace('master/data/', 'blob/master/data/')
+                    s = s.replace('.completed', '')
+                    s = s.replace('.inProgress', '')
+                    s = s.replace('.completed', '')
+                    s = s.replace('.mARkdown', '')
+
                     s = s.replace('-ara1', '-ara1.yml')
-                    console.log(s)
-                   
-                    f = "<a href ='" + s + "' target=_blank><img src='images/yml.png' height=16 title='" +  s +  "'/></a>"
+                    //console.log(s)
+
+                    f = "<a href ='" + s + "' target=_blank><img src='images/yml.png' height=16 title='" + s + "'/></a>"
                     ymlFile = "<span class='ymlfile'>" + f + "</span>"
 
 
@@ -142,13 +144,13 @@ $(document).ready(function () {
                     } else {
                         var cellContent = " <i class='fas fa-record-vinyl not-annotated' title='Not yet annotated'></i>";
                     }
-                    
+
                     // add version ID + link to the full text
-                   
-                
-                    bookURISpan = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a>' + ymlFile + '<br/></strong>'   
-                    
-                    
+
+
+                    bookURISpan = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a>' + ymlFile + '<br/></strong>'
+
+
                     // add Arabic title of the book
                     //cellContent += row['title_lat'];
 
@@ -159,8 +161,8 @@ $(document).ready(function () {
                         bookStatusTag = '<p title="This is the secondary version of this text">SEC</p>'
                     }
 
-                    topDivOpen += cellContent + bookURISpan  + bookStatusTag 
-                   
+                    topDivOpen += cellContent + bookURISpan + bookStatusTag
+
                     // add links to issues related to this text version:
                     if (row["version_issues"].length > 0) {
                         var tag = '<span class="extant issues">';
@@ -205,7 +207,7 @@ $(document).ready(function () {
                     if (type === 'rawExport') {
                         return data;
                     }
-                   
+
                     var cellContent = "<div style='float:right'><strong>"
 
                     // make link to book folder on GitHub:
@@ -214,10 +216,10 @@ $(document).ready(function () {
                     bookFolderUrl = 'https://github.com/OpenITI/' + d + 'AH' + '/tree/master/data/' + data.split(".")[0] + "/" + data
                     //console.log(bookFolderUrl)
                     cellContent += '<a href="' + bookFolderUrl + '" target="_blank" title="' + bookFolderUrl + '">'
-                    
-                    var link = bookFolderUrl+'/'+data+'.yml';
 
-                    f = "<a href ='" + link + "' target=_blank><img src='images/yml.png' height=16 title='" +  link +  "'/></a>"
+                    var link = bookFolderUrl + '/' + data + '.yml';
+
+                    f = "<a href ='" + link + "' target=_blank><img src='images/yml.png' height=16 title='" + link + "'/></a>"
                     var ymlFile = '<span class=ymlfile>' + f + '</span>'
 
                     // make Latin version of book title and add to cellContent:
@@ -271,19 +273,19 @@ $(document).ready(function () {
                     topDivOpen = "<div class='bookID' style='float:right'>"
                     TopDivClosed = "</div>"
 
-                     //Author from versionUri - taking the first part which give author with date e.g. 0322CabdAllahMahdi
-                     s = row['versionUri'].split('.')[0]
+                    //Author from versionUri - taking the first part which give author with date e.g. 0322CabdAllahMahdi
+                    s = row['versionUri'].split('.')[0]
 
-                     //Get the date 4 characters
-                     d = row['versionUri'].substring(0, 4);
-                     
-                     // pad it to get 25 year repos
-                     d = pad(Math.ceil(d / 25) * 25, 4)
-                     df = 'https://github.com/OpenITI/' + d+ 'AH' + '/blob/master/data/' + s + '/' + s + '.yml'
-                     //a = 'https://raw.githubusercontent.com/OpenITI/' + d + 'AH' + '/master/data/' + s + '/' + s + '.yml'
-                     s = s.replace(/([A-Z])/g, ' $1').trim();
-                     f = "<a href ='" + df + "' target=_blank><img src='images/yml.png' height=16 title='" +  df +  "'/></a>"
-                     ymlFile = '<span class=ymlfile>' + f + '</span>'
+                    //Get the date 4 characters
+                    d = row['versionUri'].substring(0, 4);
+
+                    // pad it to get 25 year repos
+                    d = pad(Math.ceil(d / 25) * 25, 4)
+                    df = 'https://github.com/OpenITI/' + d + 'AH' + '/blob/master/data/' + s + '/' + s + '.yml'
+                    //a = 'https://raw.githubusercontent.com/OpenITI/' + d + 'AH' + '/master/data/' + s + '/' + s + '.yml'
+                    s = s.replace(/([A-Z])/g, ' $1').trim();
+                    f = "<a href ='" + df + "' target=_blank><img src='images/yml.png' height=16 title='" + df + "'/></a>"
+                    ymlFile = '<span class=ymlfile>' + f + '</span>'
 
                     // make link to author folder on GitHub:
                     d = row["book"].substring(0, 4);
@@ -317,7 +319,7 @@ $(document).ready(function () {
                     // to be aligned vertically with the top of the cell:
                     authorDiv += '<br/><br/><br/></div>';
 
-                    
+
 
                     // Add link to raise issues about the author URI:
                     var split_url = row['url'].split('/');
@@ -377,7 +379,7 @@ $(document).ready(function () {
             },
 
 
-            
+
             {
                 "data": "status",
                 "visible": false
@@ -392,6 +394,16 @@ $(document).ready(function () {
 
         ]
 
+    });
+
+    table.on('xhr', function () {
+        var json = table.ajax.json();
+        //alert( json.data.length +' row(s) were loaded' );
+        if (json['date']) {
+            dt = json['date'] + " - " + json['time']
+            document.getElementById("timestamp").innerHTML = "Last updated on :" + dt;
+            console.log(dt)
+        }
     });
 
     $('#inProgressFilter').on('click', function () {
