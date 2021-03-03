@@ -131,6 +131,8 @@ $(document).ready(function () {
                     f = "<a href ='" + s + "' target=_blank><img src='images/yml.png' height=16 title='" +  s +  "'/></a>"
                     ymlFile = "<span class='ymlfile'>" + f + "</span>"
 
+                    var reader = "<a href='http://dev.kitab-project.org/lite-reader/" + row['versionUri'] + "' class='reader' target='_blank'><i class='fa fa-book' aria-hidden='true' title='Read the book'></i></a>"
+
 
                     // add color-coded marker for annotation status of the version:
                     var ext = row["url"].split(".")[row["url"].split(".").length - 1];
@@ -146,8 +148,9 @@ $(document).ready(function () {
                     
                     // add version ID + link to the full text
                    
-                
-                    bookURISpan = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a>' + ymlFile + '<br/></strong>'   
+                    
+     
+                    bookURISpan = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a>' + ymlFile + reader + '<br/></strong>'   
                     
                     
                     // add Arabic title of the book
@@ -160,7 +163,7 @@ $(document).ready(function () {
                         bookStatusTag = '<p title="This is the secondary version of this text">SEC</p>'
                     }
 
-                    topDivOpen += cellContent + bookURISpan  + bookStatusTag 
+                    topDivOpen += cellContent + bookURISpan  + bookStatusTag
                    
                     // add links to issues related to this text version:
                     if (row["version_issues"].length > 0) {
@@ -380,10 +383,13 @@ $(document).ready(function () {
             {
                 "data": "srts",
                 "render": function (data, type, row, meta) {
+                    
                     var cellContent = "";
                     for (var i = 0; i < data.length; i++) {
                         cellContent += '<a href="' + data[i][1] + '" target="_blank">';
                         cellContent += data[i][0] + '</a><br/>'
+                        console.log(cellContent)
+                        
                     }
 
                     return '<div class="LTR">' + cellContent + '</div>'
