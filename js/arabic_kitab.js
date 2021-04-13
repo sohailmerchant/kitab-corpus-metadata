@@ -418,7 +418,7 @@ $(document).ready(function () {
         //alert( json.data.length +' row(s) were loaded' );
         if (json['date']) {
             dt = json['date'] + " - " + json['time']
-            document.getElementById("timestamp").innerHTML = "Last updated on :" + dt;
+            document.getElementById("timestamp").innerHTML = "Last updated on : " + dt;
             console.log(dt)
         }
     });
