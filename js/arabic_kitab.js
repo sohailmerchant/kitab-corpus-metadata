@@ -81,7 +81,7 @@ $(document).ready(function () {
 
                     $.fn.dataTable.ext.search.push(
                         function (settings, data, dataIndex) {
-                            console.log(data[8])
+                            //console.log(data[8])
                             return data[8].trim() == 'pri'
 
                         }
@@ -133,6 +133,7 @@ $(document).ready(function () {
 
                     var reader = "<a href='http://dev.kitab-project.org/lite-reader/" + row['versionUri'] + "' class='reader' target='_blank'><i class='fa fa-book' aria-hidden='true' title='Read the book'></i></a>"
 
+                    //var fileDownload = "<a href='" + row['url'] + "' target='_blank' download><i class='fas fa-file-download' aria-hidden='true' title='Download the text'></i></a>"
 
                     // add color-coded marker for annotation status of the version:
                     var ext = row["url"].split(".")[row["url"].split(".").length - 1];
@@ -150,6 +151,7 @@ $(document).ready(function () {
 
 
 
+                    //bookURISpan = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a>' + ymlFile + reader + fileDownload + '<br/></strong>'
                     bookURISpan = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a>' + ymlFile + reader + '<br/></strong>'
 
 
@@ -388,7 +390,7 @@ $(document).ready(function () {
                     for (var i = 0; i < data.length; i++) {
                         cellContent += '<a href="' + data[i][1] + '" target="_blank">';
                         cellContent += data[i][0] + '</a><br/>'
-                        console.log(cellContent)
+                        //console.log(cellContent)
 
                     }
 
