@@ -81,7 +81,7 @@ $(document).ready(function () {
 
                     $.fn.dataTable.ext.search.push(
                         function (settings, data, dataIndex) {
-                            console.log(data[8])
+                            //console.log(data[8])
                             return data[8].trim() == 'pri'
 
                         }
