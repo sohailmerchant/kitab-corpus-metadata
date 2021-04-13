@@ -1,7 +1,7 @@
 var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
 var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json?v1"
-issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
+issueURItempl += "assignees=&labels=URI+change+suggestion&template=change-uri.md&title=";
 //url ="db/OpenITI_metadata_light-isnad-arabic-28052020.json"
 
 // Add Arabic font for pdfMake:
@@ -81,8 +81,8 @@ $(document).ready(function () {
 
                     $.fn.dataTable.ext.search.push(
                         function (settings, data, dataIndex) {
-                            console.log(data[8])
-                            return data[8].trim() == 'pri'
+                            //console.log(data[7])
+                            return data[7].trim() == 'pri'
 
                         }
                     )
@@ -401,7 +401,7 @@ $(document).ready(function () {
         //alert( json.data.length +' row(s) were loaded' );
         if (json['date']) {
             dt = json['date'] + " - " + json['time']
-            document.getElementById("timestamp").innerHTML = "Last updated on :" + dt;
+            document.getElementById("timestamp").innerHTML = "Last updated on : " + dt;
             console.log(dt)
         }
     });

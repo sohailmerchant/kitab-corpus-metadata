@@ -1,7 +1,7 @@
 var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
 var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json?v1"
-issueURItempl += "assignees=&labels=enhancement&template=change-uri.md&title=";
+issueURItempl += "assignees=&labels=URI+change+suggestion&template=change-uri.md&title=";
 //url ="db/OpenITI_metadata_light-isnad-arabic-28052020.json"
 // Add Arabic font for pdfMake:
 pdfMake.fonts = {
@@ -60,7 +60,7 @@ $(document).ready(function () {
         "colReorder": true,
         dom: 'Bfrtip',
         buttons: [
-     
+
             {
                 extend: 'excel',
                 filename: 'kitab-corpusmetadata',
@@ -81,7 +81,7 @@ $(document).ready(function () {
 
                     $.fn.dataTable.ext.search.push(
                         function (settings, data, dataIndex) {
-                            console.log(data[8])
+                            //console.log(data[8])
                             return data[8].trim() == 'pri'
 
                         }
@@ -118,21 +118,22 @@ $(document).ready(function () {
                      // make Github yml URL
                     //Author from versionUri - taking the first part which give author with date e.g. 0322CabdAllahMahdi
                     s = row['url'].replace('https://raw.githubusercontent.com', 'https://github.com')
-                    
+
                     s = s.replace('master/data/','blob/master/data/')
                     s= s.replace('.completed','')
                     s= s.replace('.inProgress','')
                     s=s.replace('.completed','')
                     s=s.replace('.mARkdown','')
-                    
+
                     s = s.replace('-ara1', '-ara1.yml')
                     //console.log(s)
-                   
+
                     f = "<a href ='" + s + "' target=_blank><img src='images/yml.png' height=16 title='" +  s +  "'/></a>"
                     ymlFile = "<span class='ymlfile'>" + f + "</span>"
 
                     var reader = "<a href='http://dev.kitab-project.org/lite-reader/" + row['versionUri'] + "' class='reader' target='_blank'><i class='fa fa-book' aria-hidden='true' title='Read the book'></i></a>"
 
+                    //var fileDownload = "<a href='" + row['url'] + "' target='_blank' download><i class='fas fa-file-download' aria-hidden='true' title='Download the text'></i></a>"
 
                     // add color-coded marker for annotation status of the version:
                     var ext = row["url"].split(".")[row["url"].split(".").length - 1];
@@ -145,17 +146,18 @@ $(document).ready(function () {
                     } else {
                         var cellContent = " <i class='fas fa-record-vinyl not-annotated' title='Not yet annotated'></i>";
                     }
-                    
+
                     // add version ID + link to the full text
-                   
-                    
-     
-                    bookURISpan = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a>' + ymlFile + reader + '<br/></strong>'   
-                    
-                    
+
+
+
+                    //bookURISpan = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a>' + ymlFile + reader + fileDownload + '<br/></strong>'
+                    bookURISpan = '<strong><a href="' + row['url'] + '" target="_blank" title="' + row['url'] + '"> ' + data + '</a>' + ymlFile + reader + '<br/></strong>'
+
+
                     // add Arabic title of the book
                     //cellContent += row['title_lat'];
-                   
+
                     // add info about the primary/secondary status of the version:
                     if (row['status'] === 'pri') {
                         bookStatusTag = '<p title="This is the primary version of this text">PRI</p>'
@@ -164,7 +166,7 @@ $(document).ready(function () {
                     }
 
                     topDivOpen += cellContent + bookURISpan  + bookStatusTag
-                   
+
                     // add links to issues related to this text version:
                     if (row["version_issues"].length > 0) {
                         var tag = '<span class="extant issues">';
@@ -209,7 +211,7 @@ $(document).ready(function () {
                     if (type === 'rawExport') {
                         return data;
                     }
-                   
+
                     var cellContent = "<div style='float:right'><strong>"
 
                     // make link to book folder on GitHub:
@@ -218,7 +220,7 @@ $(document).ready(function () {
                     bookFolderUrl = 'https://github.com/OpenITI/' + d + 'AH' + '/tree/master/data/' + data.split(".")[0] + "/" + data
                     //console.log(bookFolderUrl)
                     cellContent += '<a href="' + bookFolderUrl + '" target="_blank" title="' + bookFolderUrl + '">'
-                    
+
                     var link = bookFolderUrl+'/'+data+'.yml';
 
                     f = "<a href ='" + link + "' target=_blank><img src='images/yml.png' height=16 title='" +  link +  "'/></a>"
@@ -280,7 +282,7 @@ $(document).ready(function () {
 
                      //Get the date 4 characters
                      d = row['versionUri'].substring(0, 4);
-                     
+
                      // pad it to get 25 year repos
                      d = pad(Math.ceil(d / 25) * 25, 4)
                      df = 'https://github.com/OpenITI/' + d+ 'AH' + '/blob/master/data/' + s + '/' + s + '.yml'
@@ -321,7 +323,7 @@ $(document).ready(function () {
                     // to be aligned vertically with the top of the cell:
                     authorDiv += '<br/><br/><br/></div>';
 
-                    
+
 
                     // Add link to raise issues about the author URI:
                     var split_url = row['url'].split('/');
@@ -383,13 +385,13 @@ $(document).ready(function () {
             {
                 "data": "srts",
                 "render": function (data, type, row, meta) {
-                    
+
                     var cellContent = "";
                     for (var i = 0; i < data.length; i++) {
                         cellContent += '<a href="' + data[i][1] + '" target="_blank">';
                         cellContent += data[i][0] + '</a><br/>'
-                        console.log(cellContent)
-                        
+                        //console.log(cellContent)
+
                     }
 
                     return '<div class="LTR">' + cellContent + '</div>'
@@ -416,7 +418,7 @@ $(document).ready(function () {
         //alert( json.data.length +' row(s) were loaded' );
         if (json['date']) {
             dt = json['date'] + " - " + json['time']
-            document.getElementById("timestamp").innerHTML = "Last updated on :" + dt;
+            document.getElementById("timestamp").innerHTML = "Last updated on : " + dt;
             console.log(dt)
         }
     });
