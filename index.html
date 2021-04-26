@@ -23,6 +23,7 @@
     <script type="text/javascript" src="js/arabic.js"></script>
     <script src="https://kit.fontawesome.com/03581ef0eb.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Amiri&display=swap" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TGJD7641K2"></script>
 <script>
@@ -43,8 +44,30 @@ body{
 
 
 <body>
-    <div style="float: left;">
+<div style="float: left;">
     <a href="http://www.kitab-project.org" target="_blank"><img src="images/kitab-logo.png" width="100px"/></a>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="bookRelModal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <!--
+        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      -->
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="heading">

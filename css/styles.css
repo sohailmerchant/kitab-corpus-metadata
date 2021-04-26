@@ -96,6 +96,11 @@ td a{
   font-size: 16px!important;
 }
 
+.bookRelShort {
+  position:relative;
+  bottom: 10px;
+}
+
 .add-issue {
   bottom: 0;
   position: absolute;
@@ -191,13 +196,13 @@ tr.shown td.details-control {
 
 .isnad-bar-outer{
 
- 
+
 
 }
 .isnad-bar-inner{
 
-  width:100%; 
-  background-color: #F4F2E3!important; 
+  width:100%;
+  background-color: #F4F2E3!important;
   color:#E16C66;
   padding-left: 5px;
   padding-right: 5px;
@@ -213,4 +218,9 @@ tr.shown td.details-control {
 .reader{
   padding-right: 10px;
 
+}
+
+.modal-backdrop
+{
+    opacity:0.5 !important;
 }

@@ -1,8 +1,66 @@
 var table;
 var issueURItempl = "<a href ='https://github.com/OpenITI/Annotation/issues/new?";
-var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json?v1"
+var url = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_metadata_light.json?v1";
+var bookRelationsUrl = "https://raw.githubusercontent.com/OpenITI/kitab-metadata-automation/master/output/OpenITI_Github_clone_book_relations.json?v1";
 issueURItempl += "assignees=&labels=URI+change+suggestion&template=change-uri.md&title=";
 //url ="db/OpenITI_metadata_light-isnad-arabic-28052020.json"
+
+var bookRelations = (function(){
+  var relData = null;
+  $.ajax({
+    'async': false,
+    'global': false,
+    //'url': "db/bookRelations.json",
+    'url': bookRelationsUrl,
+    'dataType': "json",
+    'success': function (data) {
+      relData = data;
+    }
+  });
+  return relData;
+})();
+console.log(bookRelations);
+
+var bookRelVerbsSrc = {
+  "COMM": " is a commentary on ",
+  "ABR": " is an abridgment of ",
+  "COMP": " is a compilation of ",
+  "CONT": " is a continuation of ",
+  "TRANSL": " is a translation of ",
+  "TRANSM": " transmits ",
+};
+
+var bookRelVerbsDest = {
+  "COMM": " was commented on by ",
+  "ABR": " was abridged by ",
+  "COMP": " was compiled by ",
+  "CONT": " was continued by ",
+  "TRANSL": " was translated in ",
+  "TRANSM": " was transmitted in ",
+};
+
+var fillModal = function(bookuri){
+  console.log("filling modal");
+  console.log(bookuri);
+  var bookRelationsModal = $("#bookRelModal");
+  bookRelationsModal.find('.modal-title').text('Books related to ' + bookuri);
+  var relStr = "<ul>";
+  console.log(bookuri);
+  console.log(bookRelations[bookuri]);
+  for (i = 0; i < bookRelations[bookuri].length; i++) {
+    var relObj = bookRelations[bookuri][i];
+    if (bookuri === relObj["source"]) {
+      relStr += "<li>" + bookRelVerbsSrc[relObj["main_rel_type"]] + relObj["dest"] + "</li>";
+    } else {
+      relStr += "<li>" + bookRelVerbsDest[relObj["main_rel_type"]] + relObj["source"] + "</li>";
+    }
+  }
+  relStr += "</ul>";
+
+  bookRelationsModal.find('.modal-body').html(relStr);
+  $("#bookRelModal").modal("toggle");
+};
+
 
 // Add Arabic font for pdfMake:
 pdfMake.fonts = {
@@ -208,7 +266,14 @@ $(document).ready(function () {
                         return data;
                     }
 
-                    var cellContent = "<div style='float:right'><strong>"
+
+
+                                        // make link to raise issue with the book title URI:
+                    var split_url = row['url'].split('/');
+                    var versionuri = split_url[split_url.length - 1];
+                    var bookuri = versionuri.split(".").slice(0, 2).join(".");
+
+                    var cellContent = "<div style='position:relative'><div style='float:right'><strong>"
 
                     // make link to book folder on GitHub:
                     d = data.substring(0, 4);
@@ -219,8 +284,38 @@ $(document).ready(function () {
 
                     var link = bookFolderUrl + '/' + data + '.yml';
 
+                    // add a hidden div with button to a popup modal:
+                    if (bookRelations.hasOwnProperty(bookuri)) {
+                      //var relDiv = '<div class="bookRelShort">';
+                      //... : add related book URIs
+                      //modalButton = '<button type="button" onclick="fillModal(\''+bookuri+'\')">Book relations</button>';
+                      //relDiv += modalButton + "</div>"
+                      var modalButton = '<img src="images/bookRel.png" height="16" title="book relations" onclick="fillModal(\''+bookuri+'\')"></img>';
+                      var hiddenDiv = '<div style="display: none;">';
+                      //hiddenDiv += bookRelations[bookuri];
+                      var hiddenDivStr = "Book relations: ";
+                      for (i = 0; i < bookRelations[bookuri].length; i++) {
+                        var relObj = bookRelations[bookuri][i];
+                        if (relObj["source"] !== bookuri){
+                          if (!hiddenDivStr.includes(relObj["source"])){
+                            hiddenDivStr += " " + relObj["source"];
+                          }
+                        }
+                        if (relObj["dest"] !== bookuri){
+                          if (!hiddenDivStr.includes(relObj["dest"])){
+                            hiddenDivStr += " " + relObj["dest"];
+                          }
+                        }
+                      }
+                      hiddenDiv += hiddenDivStr + '</div>';
+                      //cellContent = cellContent + relDiv + hiddenDiv;
+                    } else {
+                      var modalButton = "";
+                      var hiddenDiv = "";
+                    }
+
                     f = "<a href ='" + link + "' target=_blank><img src='images/yml.png' height=16 title='" + link + "'/></a>"
-                    var ymlFile = '<span class=ymlfile>' + f + '</span>'
+                    var ymlFile = '<span class=ymlfile>' + f + modalButton + '</span>' + hiddenDiv
 
                     // make Latin version of book title and add to cellContent:
                     var i = data.indexOf('.')
@@ -247,19 +342,21 @@ $(document).ready(function () {
 
                     // close first part of the cell content,
                     // to be vertically aligned with the top of the cell
-                    cellContent += '<br/><br/></div>'
+                    cellContent += '<br/><br/></div></div>';
 
-                    // make link to raise issue with the book title URI:
-                    var split_url = row['url'].split('/');
-                    var versionuri = split_url[split_url.length - 1];
-                    var bookuri = versionuri.split(".").slice(0, 2).join(".");
+
                     var intro = '<div class="add-issue">Raise a book title issue<br/>';
                     var opentag = '<span class="issues">';
                     var changeUri = issueURItempl + bookuri + "' target=_blank title='Change title URI - raise issue on GitHub'>";
                     changeUri += " <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>";
-                    var endtag = '</span>';
+                    //var endtag = '</span>';
+                    var endtag = '</span></div>';
 
-                    return cellContent + intro + opentag + changeUri + endtag;
+                    //return cellContent + intro + opentag + changeUri + endtag;
+                    cellContent = cellContent + intro + opentag + changeUri + endtag;
+
+                    //return cellContent + modalDiv;
+                    return cellContent
                 }
             },
 
