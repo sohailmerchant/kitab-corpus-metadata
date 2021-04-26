@@ -91,12 +91,6 @@ $(document).ready(function () {
             //     'type': "GET",
             //     'dataType': 'text',
             'url': url,
-
-
-
-
-
-
         },
         "initComplete": function (settings, json) {
             getdata(json);
@@ -133,10 +127,10 @@ $(document).ready(function () {
                     d = data.substring(0,4);
                     d = pad(Math.ceil(d / 25) * 25,4)
                     a = 'https://raw.githubusercontent.com/OpenITI/'+d+'AH'+'/master/data/'+data+'/'+data+'.yml'
-                    
+
                     s = s.replace(/([A-Z])/g, ' $1').trim();
                     f = "<a href ='" +a+"' target=_blank>"+s+"</a>"
-                   
+
                     return f;
                     //return s = s.replace(/([A-Z])/g, ' $1').trim();
 
@@ -151,7 +145,7 @@ $(document).ready(function () {
                     data = data.substring(i + 1);
                     data = data.replace(/([A-Z])/g, ' $1').trim();
                     f = "<a href ='" +row['url']+".yml' target=_blank>"+data+"</a>"
-                    
+
                     return f
 
                 }
@@ -163,7 +157,7 @@ $(document).ready(function () {
                 "render": function (data, type, row, meta) {
                     data = data.toUpperCase();
                     var fullbookuri = row['url'].split('/')[9];
-                    //return data.toUpperCase(); 
+                    //return data.toUpperCase();
                     return data + " <span class='bugspan issues'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=question&template=pri-vs-sec.md&title=" + fullbookuri + "' target=_blank title='Change Text Status - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
 
 
@@ -185,7 +179,7 @@ $(document).ready(function () {
                     var completedText = "<a href='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+tagged&template=submission-report--for-pull-requests-.md&title=" + fullbookuri + "'target=_blank title='Report Text Tagged - raise issue on GitHub'> <i class='fas fa-tag bug'aria-hidden='true' ></i></a>";
                     var changeUri = "<a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=enhancement&template=change-uri.md&title=" + fullbookuri + "' target=_blank title='Change URI - raise issue on GitHub'> <i class='fas fa-exchange-alt bug' aria-hidden='true'></i></a>"
                     var endtag = '</span>'
-                    
+
                     return defaultLink + "<strong>Raise an issue/report: </strong> <br/>" + opentag +changeUri+ textQuality + completedText + inProgress + endtag
 
                     //return '<a href="' + data + '" target="_blank">Read the full text</a>' + "<span class='bugspan'> <a href ='https://github.com/OpenITI/Annotation/issues/new?assignees=&labels=text+quality&template=text-quality-issue-.md&title=" + fullbookuri + "' target=_blank title='Full Text Issue - raise issue on GitHub'> <i class='fas fa-bug bug'></i></a></span>";
@@ -231,6 +225,19 @@ $(document).ready(function () {
 
     });
 
+    /* FAILED ATTEMPT TO IMPLEMENT REGEX FILTERING
+    console.log("DO WE GET HERE?");
+    $(":search").on( 'keyup click', function () {
+      console.log("PRESSED");
+      console.log($(this).val());
+      $('#example').DataTable().search(
+        $(this).val(), // the value contained in the search field
+        true, // regex
+        false // smart search
+      ).draw();
+      }
+    );*/
+
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -238,14 +245,14 @@ $(document).ready(function () {
     function getdata(response) {
         //console.log(response);
         return_first = response;
-        
+
        // console.log(return_first.data);
         myData['rowCount']= return_first.data.length;
         myData['primaryBookCount'] = return_first.data.length;
         myData['primaryBooks'] = return_first.data.filter(function(data) {
            return data.status == "pri";
-           
-           
+
+
         });
        // myData.primaryBooks = Object.filter(myData, status => status ='pri');
        //console.log(JSON.stringify(myData.rowCount));
@@ -263,7 +270,7 @@ $(document).ready(function () {
     //console.log(JSON.stringify(myObj.rowCount));
 
     //console.log(myData);
-    
+
     //console.log(Object.keys(myData))
         //console.log('p:',p['rowCount'])
 
@@ -273,10 +280,4 @@ $(document).ready(function () {
     // console.log(totalRecords)
     // $('#total').html(totalRecords)
 
-
 });
-
-
-
-
-
