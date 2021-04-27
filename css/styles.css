@@ -220,7 +220,18 @@ tr.shown td.details-control {
 
 }
 
-.modal-backdrop
-{
+.modal-backdrop{
     opacity:0.5 !important;
+}
+
+#graph {
+  overflow-y: visible;
+}
+
+.vis-network {
+  overflow-y: visible;
+}
+
+img {
+  margin: 2px;
 }

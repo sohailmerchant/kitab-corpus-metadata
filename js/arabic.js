@@ -5,6 +5,77 @@ var bookRelationsUrl = "https://raw.githubusercontent.com/OpenITI/kitab-metadata
 issueURItempl += "assignees=&labels=URI+change+suggestion&template=change-uri.md&title=";
 //url ="db/OpenITI_metadata_light-isnad-arabic-28052020.json"
 
+
+
+/////////////// BOOK RELATIONS POPUP ////////////////////////////////////////////
+
+// check whether two objects have the same values for the given keys:
+var objEquals = function(obj1, obj2, keys){
+  for (const k of keys){
+    if (obj1[k] !== obj2[k]){
+      return false;
+    }
+  }
+  return true;
+};
+
+// check whether a given array `arr` contains an object `obj` that has the same values for the given keys:
+var objInArray = function(obj, arr, keys){
+  for (el of arr){
+    if (objEquals(obj, el, keys)){
+      return true;
+    }
+  }
+  return false;
+}
+
+// expand book relations: add related books for each related book (recursive):
+var expandBookRelations = function(d, n){
+  console.log(n+" recursions to go");
+  if (n === 0){
+    return d;
+  }
+  n = n-1;
+  var added_book_rels = 0;
+  var bookuris = Object.keys(d);
+  var newD = {};
+  for (const bookuri of bookuris){
+    //console.log(bookuri)
+    newD[bookuri] = d[bookuri];
+    var all_rel_books = [];
+    for (const rel of d[bookuri]){
+      for (const ds of ["source", "dest"]){
+      //for (const ds of ["dest"]){
+        if (! all_rel_books.includes(rel[ds])){
+          all_rel_books.push(rel[ds]);
+        }
+      }
+    }
+    //console.log("related books: " + all_rel_books.length);
+    //console.log(all_rel_books);
+    for (const book of all_rel_books){
+      //console.log("book: " + book);
+      for (const rel of d[book]){
+        //console.log("rel: " + rel["source"] + " > " + rel["dest"]);
+        if (! objInArray(rel, newD[bookuri], ["source", "dest", "main_rel_type"])){
+          newD[bookuri].push(rel);
+          added_book_rels += 1;
+        }
+        //console.log(newD[bookuri]);
+      }
+    }
+  }
+  //console.log("Enter new recursion!");
+  if (added_book_rels > 0){
+    return expandBookRelations(newD, n);
+  } else{
+    console.log("no more book relations found; exiting.");
+    return newD;
+  }
+};
+
+
+// load book relations metadata:
 var bookRelations = (function(){
   var relData = null;
   $.ajax({
@@ -17,10 +88,35 @@ var bookRelations = (function(){
       relData = data;
     }
   });
+  //console.log("relData.length: "+ Object.keys(relData).length);
+  relData = expandBookRelations(relData, 10);
   return relData;
 })();
-console.log(bookRelations);
 
+
+// define whether edge objects have the same `from`, `to` and `label` values
+var edgeEquals = function(edge, edge2){
+  /*for (const el of ["from", "to", "label"]){
+    console.log(el);
+    if (edge[el] !== edge2[el]){
+      return false;
+    }
+  }
+  return true;*/
+  return objEquals(edge, edge2,  ["from", "to", "label"]);
+};
+
+// define whether the `edges` array contains an object with the same `from`, `to` and `label` values as a new edge:
+/*var edgeInEdges = function(edge, edges){
+  for (comp of edges){
+    if (edgeEquals(edge, comp)){
+      return true;
+    }
+  }
+  return false
+};*/
+
+// verbose explanation of the main book relation types, seen from the yml text:
 var bookRelVerbsSrc = {
   "COMM": " is a commentary on ",
   "ABR": " is an abridgment of ",
@@ -30,6 +126,7 @@ var bookRelVerbsSrc = {
   "TRANSM": " transmits ",
 };
 
+// verbose explanation of the main book relation types, seen from the other text:
 var bookRelVerbsDest = {
   "COMM": " was commented on by ",
   "ABR": " was abridged by ",
@@ -39,7 +136,179 @@ var bookRelVerbsDest = {
   "TRANSM": " was transmitted in ",
 };
 
-var fillModal = function(bookuri){
+// define the colors to be used for the edges, dependent on the main relation type:
+var edge_colors = {
+  "COMM": "blue",
+  "ABR": "lightgray",
+  "COMP": "red",
+  "CONT": "orange",
+  "TRANSL": "green",
+  "TRANSM": "black",
+};
+
+// define the roundness of the edge's curve, dependent on the main relation type:
+// (in order to avoid overlapping edges)
+var edge_roundness = {
+  "COMM": 0.1,
+  "ABR": 1,
+  "COMP": 0.3,
+  "CONT": 0.7,
+  "TRANSL": 0.5,
+  "TRANSM": 0.9,
+};
+
+// create book relations graph:
+var createGraph = function(graph_div, bookuri, bookRelations){
+  console.log("creating graph");
+
+  // define the hierarchical level of each book on the graph based on its date:
+  var nodeLevels = [];
+  for (const relObj of bookRelations[bookuri]){
+    for (const sd of ["source", "dest"]) {
+      try {
+        var date = parseInt(relObj[sd].substr(0,4));
+        console.log(date);
+        if (!nodeLevels.includes(date)) {
+          nodeLevels.push(date);
+        }
+      }
+      catch(e) {
+        var date = parseInt(bookuri.substr(0,4));
+      }
+    }
+  }
+  nodeLevels.sort();
+
+  // initialize nodes and edges datasets:
+  var mainDate = parseInt(bookuri.substr(0,4));
+  level = nodeLevels.indexOf(mainDate);
+  var nodes = new vis.DataSet([{
+    id: bookuri,
+    label: bookuri,
+    level: level,
+    color: "red"  // give the main book node a different color
+  }]);
+  //var edges = new vis.DataSet([]);
+  var edges = [];
+
+  // add the data to the nodes and edges datasets:
+  for (const relObj of bookRelations[bookuri]){
+    // add nodes:
+    for (const sd of ["source", "dest"]) {
+      try {
+        var date = parseInt(relObj[sd].substr(0,4));
+        //console.log(date);
+        level = nodeLevels.indexOf(date);
+        //console.log(level);
+      }
+      catch(e) { // no date found in book id: put book on same level as main book
+        var date = parseInt(bookuri.substr(0,4));
+        level = nodeLevels.indexOf(date);
+        //console.log(level);
+      }
+      try {
+        nodes.add({
+          id: relObj[sd],
+          label: relObj[sd],
+          level: level
+        });
+        //nodes.add({id: relObj[sd], label: relObj[sd]});
+      }
+      catch(e) {
+        console.log(relObj[sd] + " already in nodes list");
+      }
+      // add edges:
+      var edge = {
+        from: relObj["source"],
+        to: relObj["dest"],
+        label: relObj["main_rel_type"],  // will be displayed on the edge
+        font: {align: "middle"},         // location of the displayed label: on the edge
+        arrows: "to",                    // location of the arrowhead
+        color: edge_colors[relObj["main_rel_type"]],
+        title: relObj["source"] + bookRelVerbsSrc[relObj["main_rel_type"]] + relObj["dest"],  // popup message on hover
+        smooth: {
+          roundness: edge_roundness[relObj["main_rel_type"]]   // make sure edges of different types do not overlap
+        }
+      };
+      //if (! edges.includes(edge)){
+      //if (! edgeInEdges(edge, edges)){
+      if (! objInArray(edge, edges, ["from", "to", "label"])){
+        edges.push(edge);
+      }
+    }
+  }
+  console.log(edges);
+  // provide the data in the vis format
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {
+    nodes: {
+      shape: "box"
+    },
+    edges: {
+      smooth: {
+        type: "curvedCW",
+        //type: 'cubicBezier',
+        //forceDirection: 'vertical',
+        //roundness: 1
+      }
+    },
+    layout: {  // see https://visjs.github.io/vis-network/docs/network/layout.html
+      hierarchical: {
+        direction: 'UD',           // "UD" = up - down
+        nodeSpacing: 300,          // space between nodes on the same level
+        edgeMinimization: false,  // if set to false, network will be spaced out more
+        blockShifting: false,
+        parentCentralization: false
+        //levelSeparation: 150,
+        //shakeTowards: "roots"
+        //sortMethod: "directed"
+      }
+    },
+    interaction: {
+      dragNodes: true,
+      hover: true
+    },
+    //physics: false,  // physics are used to balance the network
+    physics: {
+      BarnesHut: {
+        avoidOverlap: 1
+      }
+    },
+    /*physics: {  // see https://stackoverflow.com/a/32522961
+      forceAtlas2Based: {
+          gravitationalConstant: -26,
+          centralGravity: 0.005,
+          springLength: 230,
+          springConstant: 0.18,
+          avoidOverlap: 10
+      },
+      maxVelocity: 146,
+      solver: 'forceAtlas2Based',
+      timestep: 0.35,
+      stabilization: {
+          enabled: true,
+          iterations: 1000,
+          updateInterval: 25
+      }
+    },*/
+    width: "100%",
+    height: "100%",
+  };
+
+  // initialize the network:
+  var network = new vis.Network(graph_div, data, options);
+
+  // use physics only to get the initial network balanced out; do not use after user moved nodes:
+  network.on("stabilizationIterationsDone", function () {
+    network.setOptions( { physics: false } );
+  });
+}
+
+// Add book relations info to the modal popup:
+var fillModal = function(bookuri, graph_div){
   console.log("filling modal");
   console.log(bookuri);
   var bookRelationsModal = $("#bookRelModal");
@@ -57,10 +326,15 @@ var fillModal = function(bookuri){
   }
   relStr += "</ul>";
 
-  bookRelationsModal.find('.modal-body').html(relStr);
+  //bookRelationsModal.find('.modal-body').html(relStr);
+  var graph_div = document.getElementById("graph");
+  console.log(graph_div);
+  createGraph(graph_div, bookuri, bookRelations);
   $("#bookRelModal").modal("toggle");
 };
 
+
+///////////////////////// BUILD TABLE //////////////////////////////////////////
 
 // Add Arabic font for pdfMake:
 pdfMake.fonts = {
@@ -298,12 +572,12 @@ $(document).ready(function () {
                         var relObj = bookRelations[bookuri][i];
                         if (relObj["source"] !== bookuri){
                           if (!hiddenDivStr.includes(relObj["source"])){
-                            hiddenDivStr += " " + relObj["source"];
+                            hiddenDivStr += " " + relObj["source"] + "(" + relObj["main_rel_type"] + "." + relObj["sec_rel_type"] + ")";
                           }
                         }
                         if (relObj["dest"] !== bookuri){
                           if (!hiddenDivStr.includes(relObj["dest"])){
-                            hiddenDivStr += " " + relObj["dest"];
+                            hiddenDivStr += " " + relObj["dest"] + "(" + relObj["main_rel_type"] + "." + relObj["sec_rel_type"] + ")";
                           }
                         }
                       }
