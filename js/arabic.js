@@ -306,6 +306,13 @@ var createGraph = function(graph_div, bookuri, bookRelations){
   network.on("stabilizationIterationsDone", function () {
     network.setOptions( { physics: false } );
   });
+
+  // make it possible to save the network:
+  network.on("afterDrawing", function (ctx) {
+    var dataURL = ctx.canvas.toDataURL();
+    document.getElementById('downloadGraph').href = dataURL;
+  });
+  // NB: for later: svg export: https://github.com/justinharrell/vis-svg/blob/master/svg-export.html
 }
 
 // Add book relations info to the modal popup:
