@@ -311,6 +311,7 @@ var createGraph = function(graph_div, bookuri, bookRelations){
   network.on("afterDrawing", function (ctx) {
     var dataURL = ctx.canvas.toDataURL();
     document.getElementById('downloadGraph').href = dataURL;
+    document.getElementById('downloadGraph').download = bookuri + "_relations.png";
   });
   // NB: for later: svg export: https://github.com/justinharrell/vis-svg/blob/master/svg-export.html
 }
