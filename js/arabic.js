@@ -272,12 +272,13 @@ var createGraph = function(graph_div, bookuri, bookRelations){
       hover: true
     },
     //physics: false,  // physics are used to balance the network
-    physics: {
-      BarnesHut: {
+    /*physics: {
+      barnesHut: {
         avoidOverlap: 1
       }
-    },
-    /*physics: {  // see https://stackoverflow.com/a/32522961
+    },*/
+    //physics: true,
+    physics: {  // see https://stackoverflow.com/a/32522961
       forceAtlas2Based: {
           gravitationalConstant: -26,
           centralGravity: 0.005,
@@ -293,7 +294,7 @@ var createGraph = function(graph_div, bookuri, bookRelations){
           iterations: 1000,
           updateInterval: 25
       }
-    },*/
+    },
     width: "100%",
     height: "100%",
   };
