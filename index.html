@@ -94,114 +94,120 @@
       click <a href="https://kitab-project.org/metadata/">here</a> to go to the
       Kitab homepage.
     </h3>
+    <div style="display: none">
+      <div style="float: left">
+        <a href="http://www.kitab-project.org" target="_blank"
+          ><img src="images/kitab-logo.png" width="100px"
+        /></a>
+      </div>
 
-    <div style="float: left">
-      <a href="http://www.kitab-project.org" target="_blank"
-        ><img src="images/kitab-logo.png" width="100px"
-      /></a>
-    </div>
-
-    <div
-      class="modal"
-      tabindex="-1"
-      role="dialog"
-      id="bookRelModal"
-      role="dialog"
-    >
       <div
-        class="modal-dialog"
-        role="document"
-        style="width: 80%; max-width: 1250px; height: 90vh"
+        class="modal"
+        tabindex="-1"
+        role="dialog"
+        id="bookRelModal"
+        role="dialog"
       >
         <div
-          class="modal-content"
-          style="width: 80%; max-width: 1250px; height: 80vh"
+          class="modal-dialog"
+          role="document"
+          style="width: 80%; max-width: 1250px; height: 90vh"
         >
-          <div class="modal-header">
-            <h5 class="modal-title" id="modal-title"></h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" id="graph"></div>
-          <div class="modal-footer">
-            <a id="downloadGraph" download="book_relations_graph.png" href=""
-              >Download this graph as an image</a
-            >
-            <!--
+          <div
+            class="modal-content"
+            style="width: 80%; max-width: 1250px; height: 80vh"
+          >
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-title"></h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="graph"></div>
+            <div class="modal-footer">
+              <a id="downloadGraph" download="book_relations_graph.png" href=""
+                >Download this graph as an image</a
+              >
+              <!--
         <button type="button" class="btn btn-primary">Save changes</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       -->
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="heading">
-      <h2>KITAB Corpus Arabic Metadata (OpenITI)</h2>
-      <p id="timestamp">Updated Daily</p>
-    </div>
-    <div class="info" style="float: left; padding: 10px">
-      <div id="total"></div>
-      <span>Filter entries by annotation status: </span>
-      <span id="notYetAnnotatedFilter"
-        ><i class="fas fa-record-vinyl not-annotated" title="Not yet annotated">
-        </i>
-        Not Yet Annotated</span
-      >
-      <span id="inProgressFilter"
-        ><i
-          class="fas fa-record-vinyl inProgress"
-          title="Annotation in progress"
+      <div class="heading">
+        <h2>KITAB Corpus Arabic Metadata (OpenITI)</h2>
+        <p id="timestamp">Updated Daily</p>
+      </div>
+      <div class="info" style="float: left; padding: 10px">
+        <div id="total"></div>
+        <span>Filter entries by annotation status: </span>
+        <span id="notYetAnnotatedFilter"
+          ><i
+            class="fas fa-record-vinyl not-annotated"
+            title="Not yet annotated"
+          >
+          </i>
+          Not Yet Annotated</span
         >
-        </i>
-        Annotation In Progress</span
-      >
-      <span id="AnnotationCompletedFilter"
-        ><i class="fas fa-record-vinyl completed" title="Annotation completed">
-        </i>
-        Annotation Completed</span
-      >
-      <span id="AnnotationVettedFilter"
-        ><i
-          class="fas fa-record-vinyl mARkdown"
-          title="Annotation completed and vetted"
+        <span id="inProgressFilter"
+          ><i
+            class="fas fa-record-vinyl inProgress"
+            title="Annotation in progress"
+          >
+          </i>
+          Annotation In Progress</span
         >
-        </i>
-        Annotation Completed and Vetted</span
-      >
-    </div>
-    <div id="container" style="float: left; width: 100%">
-      <table
-        id="example"
-        class="arabic table table-striped table-hover table-sm"
-        style="width: 100%; direction: rtl"
-      >
-        <thead class="thead-light">
-          <tr>
-            <!-- <th>Verion URI</th> -->
-            <th>Version Id</th>
+        <span id="AnnotationCompletedFilter"
+          ><i
+            class="fas fa-record-vinyl completed"
+            title="Annotation completed"
+          >
+          </i>
+          Annotation Completed</span
+        >
+        <span id="AnnotationVettedFilter"
+          ><i
+            class="fas fa-record-vinyl mARkdown"
+            title="Annotation completed and vetted"
+          >
+          </i>
+          Annotation Completed and Vetted</span
+        >
+      </div>
+      <div id="container" style="float: left; width: 100%">
+        <table
+          id="example"
+          class="arabic table table-striped table-hover table-sm"
+          style="width: 100%; direction: rtl"
+        >
+          <thead class="thead-light">
+            <tr>
+              <!-- <th>Verion URI</th> -->
+              <th>Version Id</th>
 
-            <th>Book Title</th>
-            <th>Author</th>
-            <th>Date</th>
-            <th>Length</th>
-            <!-- <th>Status</th> -->
-            <th>Edition / Editor</th>
-            <th>Tags</th>
+              <th>Book Title</th>
+              <th>Author</th>
+              <th>Date</th>
+              <th>Length</th>
+              <!-- <th>Status</th> -->
+              <th>Edition / Editor</th>
+              <th>Tags</th>
 
-            <!--  <th>Full Text Book URL</th>
+              <!--  <th>Full Text Book URL</th>
                     <th>Full Book URI</th> -->
 
-            <th>Status</th>
-          </tr>
-        </thead>
-        <!-- <tfoot>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <!-- <tfoot>
                     <tr>
                             <th>Book URI</th>
                             <th>Author</th>
@@ -213,7 +219,8 @@
                             <th style="word-wrap: break-word;">Full Text Book URL</th>
                     </tr>
                 </tfoot> -->
-      </table>
+        </table>
+      </div>
     </div>
   </body>
 </html>
